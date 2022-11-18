@@ -48,7 +48,7 @@ class PokemonDetailScreen extends StatelessWidget {
                   Container(
                     width: double.infinity,
                     height: 1,
-                    color: sliderInActiveColor,
+                    color: lightShadeGreyColor,
                   ),
                 ],
               ),

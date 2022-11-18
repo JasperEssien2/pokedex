@@ -55,7 +55,7 @@ class _ItemStatsState extends State<ItemStats> {
                 max: 100,
                 min: 0,
                 activeColor: getColor,
-                inactiveColor: sliderInActiveColor,
+                inactiveColor: lightShadeGreyColor,
                 value: stat.stat.toDouble(),
                 onChanged: (_) {},
               ),
