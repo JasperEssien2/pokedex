@@ -103,7 +103,8 @@ class PokemonGridView extends StatelessWidget {
           ? PokedexCardShimmer(index: index, animate: true)
           : PokedexCard(
               index: index,
-              pokemonEntity: PokemonEntity.dummy(),
+              pokemon: PokemonEntity.dummy()
+                  .copyWith(id: index, isFavourited: isFavourite),
               animate: true,
             ),
     );

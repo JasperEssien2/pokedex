@@ -2,16 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
 class PokemonEntity implements EquatableMixin {
-  PokemonEntity(
-    this.id,
-    this.svgSprite,
-    this.name,
-    this.isFavourited,
-    this.type,
-    this.attribute,
-    this.stats,
-    this.backgroundColor,
-  );
+  PokemonEntity({
+    required this.id,
+    required this.svgSprite,
+    required this.name,
+    required this.isFavourited,
+    required this.type,
+    required this.attribute,
+    required this.stats,
+    required this.backgroundColor,
+  });
 
   final int id;
   final String svgSprite;
@@ -19,7 +19,7 @@ class PokemonEntity implements EquatableMixin {
   final bool isFavourited;
   final String type;
   final PokemonAttributeEntity attribute;
-  final PokemonStatsEntity stats;
+  final List<PokemonStatEntity> stats;
   final Color backgroundColor;
 
   PokemonEntity.dummy()
@@ -30,7 +30,7 @@ class PokemonEntity implements EquatableMixin {
         type = "Poison",
         isFavourited = true,
         attribute = PokemonAttributeEntity.dummy(),
-        stats = PokemonStatsEntity.dummy(),
+        stats = [PokemonStatEntity.dummy()],
         backgroundColor = Colors.blue.withOpacity(.1);
 
   @override
@@ -55,24 +55,28 @@ class PokemonEntity implements EquatableMixin {
     bool? isFavourited,
     String? type,
     PokemonAttributeEntity? attribute,
-    PokemonStatsEntity? stats,
+    List<PokemonStatEntity>? stats,
     Color? backgroundColor,
   }) {
     return PokemonEntity(
-      id ?? this.id,
-      svgSprite ?? this.svgSprite,
-      name ?? this.name,
-      isFavourited ?? this.isFavourited,
-      type ?? this.type,
-      attribute ?? this.attribute,
-      stats ?? this.stats,
-      backgroundColor ?? this.backgroundColor,
+      id: id ?? this.id,
+      svgSprite: svgSprite ?? this.svgSprite,
+      name: name ?? this.name,
+      isFavourited: isFavourited ?? this.isFavourited,
+      type: type ?? this.type,
+      attribute: attribute ?? this.attribute,
+      stats: stats ?? this.stats,
+      backgroundColor: backgroundColor ?? this.backgroundColor,
     );
   }
 }
 
 class PokemonAttributeEntity implements EquatableMixin {
-  PokemonAttributeEntity(this.weight, this.height, this.bmi);
+  PokemonAttributeEntity({
+    required this.weight,
+    required this.height,
+    required this.bmi,
+  });
 
   final num weight;
   final num height;
@@ -95,58 +99,37 @@ class PokemonAttributeEntity implements EquatableMixin {
     num? bmi,
   }) {
     return PokemonAttributeEntity(
-      weight ?? this.weight,
-      height ?? this.height,
-      bmi ?? this.bmi,
+      weight: weight ?? this.weight,
+      height: height ?? this.height,
+      bmi: bmi ?? this.bmi,
     );
   }
 }
 
-class PokemonStatsEntity implements EquatableMixin {
-  PokemonStatsEntity(this.hp, this.attack, this.defense, this.specialAttack,
-      this.specialDefense, this.speed, this.avgPower);
 
-  final num hp;
-  final num attack;
-  final num defense;
-  final num specialAttack;
-  final num specialDefense;
-  final num speed;
-  final num avgPower;
+class PokemonStatEntity implements EquatableMixin {
+  PokemonStatEntity({required this.name, required this.stat});
 
-  PokemonStatsEntity.dummy()
-      : hp = 20,
-        attack = 40,
-        defense = 10,
-        specialAttack = 5,
-        specialDefense = 80,
-        speed = 34,
-        avgPower = 100;
+  final String name;
+  final num stat;
+
+  PokemonStatEntity.dummy()
+      : name = "hp",
+        stat = 50;
 
   @override
-  List<Object?> get props =>
-      [hp, attack, defense, specialAttack, specialDefense, speed, avgPower];
+  List<Object?> get props => [name, stat];
 
   @override
   bool? get stringify => true;
 
-  PokemonStatsEntity copyWith({
-    num? hp,
-    num? attack,
-    num? defense,
-    num? specialAttack,
-    num? specialDefense,
-    num? speed,
-    num? avgPower,
+  PokemonStatEntity copyWith({
+    String? name,
+    num? stat,
   }) {
-    return PokemonStatsEntity(
-      hp ?? this.hp,
-      attack ?? this.attack,
-      defense ?? this.defense,
-      specialAttack ?? this.specialAttack,
-      specialDefense ?? this.specialDefense,
-      speed ?? this.speed,
-      avgPower ?? this.avgPower,
+    return PokemonStatEntity(
+      name: name ?? this.name,
+      stat: stat ?? this.stat,
     );
   }
 }

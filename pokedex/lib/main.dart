@@ -22,6 +22,11 @@ class MyApp extends StatelessWidget {
           labelColor: Colors.black,
           labelStyle: GoogleFonts.notoSans(fontWeight: FontWeight.w500),
         ),
+        sliderTheme: SliderThemeData(
+          trackHeight: 4,
+          thumbShape: SliderComponentShape.noThumb,
+          overlayShape: SliderComponentShape.noThumb,
+        ),
         //TODO: Extract hardcoded colors
         scaffoldBackgroundColor: const Color(0xffE8E8E8),
         textTheme: GoogleFonts.notoSansAdlamTextTheme(),
@@ -30,6 +35,7 @@ class MyApp extends StatelessWidget {
     );
   }
 
+  //GOtten from stack overflow
   MaterialColor createMaterialColor(Color color) {
     List strengths = <double>[.05];
     Map<int, Color> swatch = {};

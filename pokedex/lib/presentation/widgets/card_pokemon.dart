@@ -4,17 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
+import 'package:pokedex/presentation/detail_screen.dart';
 import 'package:pokedex/presentation/widgets/shimmer_widget.dart';
+import 'package:pokedex/util.dart/util_export.dart';
 
 class PokedexCard extends StatelessWidget {
   const PokedexCard({
     super.key,
-    required this.pokemonEntity,
+    required this.pokemon,
     required this.index,
     this.animate = false,
   });
 
-  final PokemonEntity pokemonEntity;
+  final PokemonEntity pokemon;
   final int index;
   final bool animate;
 
@@ -25,37 +27,52 @@ class PokedexCard extends StatelessWidget {
     return ScaleAnimationContainer(
       index: index,
       performAnimation: animate,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _ImageContainer(
-            backgroundColor: pokemonEntity.backgroundColor,
-            child: SvgPicture.network(
-              pokemonEntity.svgSprite,
-              height: 80,
-              width: 80,
-            ),
+      child: GestureDetector(
+        onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => PokemonDetailScreen(pokemon: pokemon),
           ),
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("#${pokemonEntity.id}", style: textTheme.bodySmall),
-                Text(
-                  pokemonEntity.name,
-                  style: textTheme.bodyMedium!.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _ImageContainer(
+              backgroundColor: pokemon.backgroundColor,
+              child: Hero(
+                tag: pokemon.imageTag,
+                child: SvgPicture.network(
+                  pokemon.svgSprite,
+                  height: 80,
+                  width: 80,
                 ),
-                const SizedBox(height: 10),
-                Text(pokemonEntity.type, style: textTheme.bodySmall),
-              ],
+              ),
             ),
-          )
-        ],
+            Container(
+              color: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(pokemon.id.pokemonId,
+                      style: textTheme.bodySmall),
+                  Text(
+                    pokemon.name,
+                    style: textTheme.bodyMedium!.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    pokemon.type,
+                    style: textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
