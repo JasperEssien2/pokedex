@@ -22,22 +22,30 @@ class _HomeScreenState extends State<HomeScreen> {
         title: SvgPicture.asset(IconUtil.appIcon),
       ),
       body: DefaultTabController(
-        length: 3,
+        length: 2,
         child: Column(
           children: [
-            TabBar(
-              tabs: _tabs
-                  .map((e) => Tab(
-                        text: e,
-                      ))
-                  .toList(),
-              indicator: const BoxDecoration(),
+            Container(
+              color: Colors.white,
+              child: TabBar(
+                tabs: _tabs
+                    .map((e) => Tab(
+                          text: e,
+                        ))
+                    .toList(),
+                indicator: const BoxDecoration(),
+              ),
             ),
-            const TabBarView(
-              children: [
-                PokemonGridView(),
-                PokemonGridView(isFavourite: true),
-              ],
+            const Expanded(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: TabBarView(
+                  children: [
+                    PokemonGridView(),
+                    PokemonGridView(isFavourite: true),
+                  ],
+                ),
+              ),
             )
           ],
         ),
@@ -65,13 +73,16 @@ class PokemonGridView extends StatelessWidget {
         crossAxisCount: 3,
         mainAxisSpacing: margin,
         crossAxisSpacing: margin,
+        mainAxisExtent: 200,
       ),
-      itemCount: 9,
+      itemCount: 29,
       physics: const BouncingScrollPhysics(),
       itemBuilder: (context, index) => isLoading
-          ? const PokedexCardShimmer()
+          ? PokedexCardShimmer(index: index, animate: true)
           : PokedexCard(
+              index: index,
               pokemonEntity: PokemonEntity.dummy(),
+              animate: true,
             ),
     );
   }

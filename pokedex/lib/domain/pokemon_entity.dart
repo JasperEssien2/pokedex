@@ -31,7 +31,7 @@ class PokemonEntity implements EquatableMixin {
         isFavourited = true,
         attribute = PokemonAttributeEntity.dummy(),
         stats = PokemonStatsEntity.dummy(),
-        backgroundColor = Colors.blue;
+        backgroundColor = Colors.blue.withOpacity(.1);
 
   @override
   List<Object?> get props => [
