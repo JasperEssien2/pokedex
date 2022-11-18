@@ -3,12 +3,11 @@ import 'package:pokedex/domain/pokemon_entity.dart';
 extension NumExt on num {
   String get pokemonId {
     var strId = toString();
-    final length = strId.length;
 
-    if (length == 1) {
-      strId = strId.padLeft(2, '0');
-    } else if (length == 2) {
-      strId = strId.padLeft(1, '0');
+    if (this < 10) {
+      strId = strId.padLeft(3, '0');
+    } else if (this < 100) {
+      strId = strId.padLeft(3, '0');
     }
 
     return "#$strId";
@@ -17,5 +16,4 @@ extension NumExt on num {
 
 extension PokemonEntityExt on PokemonEntity {
   String get imageTag => "image-$id-$isFavourited";
-
 }

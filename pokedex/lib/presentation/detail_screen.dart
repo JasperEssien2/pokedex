@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
-import 'package:pokedex/presentation/widgets/item_stat.dart';
+import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
 class PokemonDetailScreen extends StatelessWidget {
@@ -59,7 +59,11 @@ class PokemonDetailScreen extends StatelessWidget {
               color: Colors.white,
               child: Column(
                 children: pokemon.stats
-                    .map((e) => ItemStats(key: ValueKey(e), stat: e))
+                    .map((e) => ItemStats(
+                          key: ValueKey(e),
+                          stat: e,
+                          index: pokemon.stats.indexOf(e),
+                        ))
                     .toList(),
               ),
             ),
@@ -103,28 +107,32 @@ class _AppBar extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.bottomCenter,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    pokemon.name,
-                    style: textTheme.headlineLarge!.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: textBlackColor,
+              child: AnimatableParent(
+                index: 0,
+                performAnimation: true,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      pokemon.name,
+                      style: textTheme.headlineLarge!.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: textBlackColor,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 3),
-                  Text(
-                    pokemon.type,
-                    style: textTheme.headlineMedium,
-                  ),
-                  const Expanded(child: SizedBox.shrink()),
-                  Text(
-                    pokemon.id.pokemonId,
-                    style: textTheme.headlineMedium,
-                  ),
-                ],
+                    const SizedBox(height: 3),
+                    Text(
+                      pokemon.type,
+                      style: textTheme.headlineMedium,
+                    ),
+                    const Expanded(child: SizedBox.shrink()),
+                    Text(
+                      pokemon.id.pokemonId,
+                      style: textTheme.headlineMedium,
+                    ),
+                  ],
+                ),
               ),
             ),
             Expanded(

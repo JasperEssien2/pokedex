@@ -30,7 +30,10 @@ class PokemonEntity implements EquatableMixin {
         type = "Poison",
         isFavourited = true,
         attribute = PokemonAttributeEntity.dummy(),
-        stats = [PokemonStatEntity.dummy()],
+        stats = List.generate(
+          5,
+          (index) => PokemonStatEntity.dummy().copyWith(name: "Name $index"),
+        ),
         backgroundColor = Colors.blue.withOpacity(.1);
 
   @override
@@ -105,7 +108,6 @@ class PokemonAttributeEntity implements EquatableMixin {
     );
   }
 }
-
 
 class PokemonStatEntity implements EquatableMixin {
   PokemonStatEntity({required this.name, required this.stat});

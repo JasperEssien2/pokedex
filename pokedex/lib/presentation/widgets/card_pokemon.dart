@@ -1,12 +1,13 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/presentation/detail_screen.dart';
 import 'package:pokedex/presentation/widgets/shimmer_widget.dart';
 import 'package:pokedex/util.dart/util_export.dart';
+
+import 'animatable_parent.dart';
 
 class PokedexCard extends StatelessWidget {
   const PokedexCard({
@@ -24,7 +25,7 @@ class PokedexCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
 
-    return ScaleAnimationContainer(
+    return AnimatableParent(
       index: index,
       performAnimation: animate,
       child: GestureDetector(
@@ -55,8 +56,7 @@ class PokedexCard extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(pokemon.id.pokemonId,
-                      style: textTheme.bodySmall),
+                  Text(pokemon.id.pokemonId, style: textTheme.bodySmall),
                   Text(
                     pokemon.name,
                     style: textTheme.bodyMedium!.copyWith(
@@ -90,7 +90,7 @@ class PokedexCardShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ScaleAnimationContainer(
+    return AnimatableParent(
       index: index,
       performAnimation: animate,
       child: Column(
@@ -122,59 +122,6 @@ class PokedexCardShimmer extends StatelessWidget {
           )
         ],
       ),
-    );
-  }
-}
-
-class ScaleAnimationContainer extends StatefulWidget {
-  const ScaleAnimationContainer({
-    super.key,
-    required this.performAnimation,
-    required this.index,
-    required this.child,
-  });
-
-  final bool performAnimation;
-  final int index;
-  final Widget child;
-
-  @override
-  State<ScaleAnimationContainer> createState() =>
-      _ScaleAnimationContainerState();
-}
-
-class _ScaleAnimationContainerState extends State<ScaleAnimationContainer> {
-  bool _animate = false;
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.performAnimation) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        Future.delayed(Duration(
-                milliseconds: widget.index == 0 ? 0 : 60 * widget.index))
-            .then(
-          (value) {
-            setState(() {
-              _animate = true;
-            });
-          },
-        );
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedScale(
-      duration: const Duration(milliseconds: 400),
-      scale: widget.performAnimation
-          ? _animate
-              ? 1
-              : 0
-          : 1,
-      child: widget.child,
     );
   }
 }
