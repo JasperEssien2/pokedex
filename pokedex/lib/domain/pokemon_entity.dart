@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 class PokemonEntity implements EquatableMixin {
   PokemonEntity(
@@ -9,6 +10,7 @@ class PokemonEntity implements EquatableMixin {
     this.type,
     this.attribute,
     this.stats,
+    this.backgroundColor,
   );
 
   final int id;
@@ -18,15 +20,18 @@ class PokemonEntity implements EquatableMixin {
   final String type;
   final PokemonAttributeEntity attribute;
   final PokemonStatsEntity stats;
+  final Color backgroundColor;
 
   PokemonEntity.dummy()
       : id = 2,
-        svgSprite = 's.svg',
+        svgSprite =
+            'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
         name = "Bulbasaur",
         type = "Poison",
         isFavourited = true,
         attribute = PokemonAttributeEntity.dummy(),
-        stats = PokemonStatsEntity.dummy();
+        stats = PokemonStatsEntity.dummy(),
+        backgroundColor = Colors.blue;
 
   @override
   List<Object?> get props => [
@@ -37,6 +42,7 @@ class PokemonEntity implements EquatableMixin {
         type,
         attribute,
         stats,
+        backgroundColor
       ];
 
   @override
@@ -50,6 +56,7 @@ class PokemonEntity implements EquatableMixin {
     String? type,
     PokemonAttributeEntity? attribute,
     PokemonStatsEntity? stats,
+    Color? backgroundColor,
   }) {
     return PokemonEntity(
       id ?? this.id,
@@ -59,6 +66,7 @@ class PokemonEntity implements EquatableMixin {
       type ?? this.type,
       attribute ?? this.attribute,
       stats ?? this.stats,
+      backgroundColor ?? this.backgroundColor,
     );
   }
 }
