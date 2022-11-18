@@ -1,4 +1,4 @@
-package com.example.pokemon
+package com.example.pokedex
 
 import io.flutter.embedding.android.FlutterActivity
 
