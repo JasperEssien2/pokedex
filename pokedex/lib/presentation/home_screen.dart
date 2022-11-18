@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           children: [
             Container(
+              margin: const EdgeInsets.only(top: 2),
               color: Colors.white,
               child: TabBar(
                 tabs: [
