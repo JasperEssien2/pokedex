@@ -28,12 +28,33 @@ class _HomeScreenState extends State<HomeScreen> {
             Container(
               color: Colors.white,
               child: TabBar(
-                tabs: _tabs
-                    .map((e) => Tab(
-                          text: e,
-                        ))
-                    .toList(),
-                indicator: const BoxDecoration(),
+                tabs: [
+                  Tab(
+                    text: _tabs.first,
+                  ),
+                  Tab(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(_tabs.last),
+                        const SizedBox(width: 10),
+                        CircleAvatar(
+                          radius: 10,
+                          backgroundColor: Theme.of(context).primaryColor,
+                          child: const Text(
+                            "2",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicatorWeight: 3.0,
               ),
             ),
             const Expanded(
