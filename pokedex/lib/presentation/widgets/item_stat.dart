@@ -4,7 +4,7 @@ import 'package:pokedex/util.dart/colors.dart';
 
 import 'animatable_parent.dart';
 
-class ItemStats extends StatefulWidget {
+class ItemStats extends StatelessWidget {
   const ItemStats({
     super.key,
     required this.stat,
@@ -15,20 +15,13 @@ class ItemStats extends StatefulWidget {
   final int index;
 
   @override
-  State<ItemStats> createState() => _ItemStatsState();
-}
-
-class _ItemStatsState extends State<ItemStats> {
-  late final stat = widget.stat;
-
-  @override
   Widget build(BuildContext context) {
     final textStyle = Theme.of(context).textTheme;
 
     return AnimatableParent(
       performAnimation: true,
       animationType: AnimationType.slide,
-      index: widget.index,
+      index: index,
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

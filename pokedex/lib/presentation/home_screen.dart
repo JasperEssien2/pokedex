@@ -88,7 +88,7 @@ class PokemonGridView extends StatelessWidget {
   Widget build(BuildContext context) {
     bool isLoading = false;
 
-    bool isError = true;
+    bool isError = false;
 
     if (isError) {
       return const InfoWidget(text: "An error occurred", buttonText: "Retry");
