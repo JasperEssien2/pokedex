@@ -19,8 +19,9 @@ dependencies:
   google_fonts: ^3.0.1
   shimmer: ^2.0.0
   equatable: ^2.0.5
-  get_it: ^7.2.0
   flutter_svg: ^1.1.6
+  either_dart: ^0.3.0
+  graphql: ^5.1.1
  
 dev_dependencies:
   flutter_test:

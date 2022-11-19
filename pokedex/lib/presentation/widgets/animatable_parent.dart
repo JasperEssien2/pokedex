@@ -8,6 +8,7 @@ class AnimatableParent extends StatefulWidget {
     this.animationType = AnimationType.scale,
     this.curve,
     this.duration,
+    this.delayMilliseconds,
     this.index = 0,
     required this.child,
   });
@@ -15,6 +16,7 @@ class AnimatableParent extends StatefulWidget {
   final bool performAnimation;
   final Curve? curve;
   final Duration? duration;
+  final int? delayMilliseconds;
   final int index;
   final AnimationType animationType;
 
@@ -37,9 +39,12 @@ class _AnimatableParentState extends State<AnimatableParent> {
   Future<void> _updateAnimation() async {
     if (widget.performAnimation) {
       SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        Future.delayed(Duration(
-                milliseconds: widget.index == 0 ? 0 : 60 * widget.index))
-            .then(
+        final delayDuration = Duration(
+            milliseconds: widget.index == 0
+                ? 0
+                : (widget.delayMilliseconds ?? 60) * widget.index);
+
+        Future.delayed(delayDuration).then(
           (value) {
             setState(() {
               _animate = !_animate;

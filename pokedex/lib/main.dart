@@ -1,22 +1,50 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pokedex/data/repository.dart';
+import 'package:pokedex/domain/repository_base.dart';
+import 'package:pokedex/presentation/data_controller.dart';
+import 'package:pokedex/presentation/data_provider.dart';
 import 'package:pokedex/presentation/home_screen.dart';
+import 'package:pokedex/util.dart/colors.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp(
+    repository: Repository(),
+  ));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+    required this.repository,
+  });
 
-  // This widget is the root of your application.
+  final RepositoryBase repository;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final _favouriteController =
+      FavoritePokenDataController(repository: widget.repository);
+  late final _pokemonController =
+      PokemonDataController(repository: widget.repository);
+
+  @override
+  void initState() {
+    _favouriteController.fetch();
+    _pokemonController.fetch();
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
         useMaterial3: true,
-
         primarySwatch: createMaterialColor(const Color(0xff3558CD)),
         tabBarTheme: TabBarTheme(
           labelColor: Colors.black,
@@ -27,11 +55,18 @@ class MyApp extends StatelessWidget {
           thumbShape: SliderComponentShape.noThumb,
           overlayShape: SliderComponentShape.noThumb,
         ),
-        //TODO: Extract hardcoded colors
-        scaffoldBackgroundColor: const Color(0xffE8E8E8),
+        scaffoldBackgroundColor: scaffoldColor,
         textTheme: GoogleFonts.notoSansAdlamTextTheme(),
       ),
-      home: const HomeScreen(),
+      home: DataControllerProvider(
+        dataController: _favouriteController,
+        child: DataControllerProvider(
+          dataController: _pokemonController,
+          child: Builder(builder: (context) {
+            return const HomeScreen();
+          }),
+        ),
+      ),
     );
   }
 
@@ -54,5 +89,12 @@ class MyApp extends StatelessWidget {
       );
     }
     return MaterialColor(color.value, swatch);
+  }
+
+  @override
+  void dispose() {
+    _favouriteController.dispose();
+    _pokemonController.dispose();
+    super.dispose();
   }
 }
