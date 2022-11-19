@@ -10,7 +10,7 @@ class Repository implements RepositoryBase {
 
     return Right(List.generate(
       20,
-      (index) => PokemonEntity.dummy().copyWith(id: index),
+      (index) => PokemonEntity.dummy().copyWith(id: index * offset),
     ));
   }
 

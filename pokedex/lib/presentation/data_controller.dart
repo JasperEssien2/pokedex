@@ -50,9 +50,9 @@ abstract class BaseDataController<T> extends ChangeNotifier {
 
   final T _data;
 
-  late UIState<T?> _state = UIState<T?>(data: _data);
+  late UIState<T> _state = UIState<T>(data: _data);
 
-  set state(UIState<T?> newState) {
+  set state(UIState<T> newState) {
     if (newState == _state) return;
 
     _state = newState;
@@ -60,7 +60,7 @@ abstract class BaseDataController<T> extends ChangeNotifier {
     notifyListeners();
   }
 
-  UIState<T?> get state => _state;
+  UIState<T> get state => _state;
 
   int _nextPage = 1;
 
@@ -94,7 +94,8 @@ class PokemonDataController extends BaseDataController<PokemonList> {
       (left) => state = _state.errorState(left),
       (right) {
         _nextPage++;
-        state = _state.successState(right, empty: right.isEmpty);
+        final newList = state.data..addAll(right);
+        state = _state.successState(newList, empty: right.isEmpty);
       },
     );
   }
