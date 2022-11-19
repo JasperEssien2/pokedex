@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/data/repository.dart';
+import 'package:pokedex/data/fake_repository.dart';
 import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/data_provider.dart';
@@ -9,7 +9,7 @@ import 'package:pokedex/util.dart/colors.dart';
 
 void main() {
   runApp(MyApp(
-    repository: Repository(),
+    repository: FakeRepository(),
   ));
 }
 
@@ -17,9 +17,11 @@ class MyApp extends StatefulWidget {
   const MyApp({
     super.key,
     required this.repository,
+    this.navigatorObserver,
   });
 
   final RepositoryBase repository;
+  final NavigatorObserver? navigatorObserver;
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -43,6 +45,9 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
+      navigatorObservers: [
+        if (widget.navigatorObserver != null) widget.navigatorObserver!
+      ],
       theme: ThemeData(
         useMaterial3: true,
         primarySwatch: createMaterialColor(const Color(0xff3558CD)),

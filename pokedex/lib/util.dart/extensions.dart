@@ -29,4 +29,7 @@ extension BuildContextExt on BuildContext {
 
   FavoritePokenDataController get favouritePokemonController =>
       dataController<FavoritePokenDataController>();
+
+  PokemonDataController get pokemonController =>
+      dataController<PokemonDataController>();
 }

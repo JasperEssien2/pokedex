@@ -95,7 +95,11 @@ class PokemonDataController extends BaseDataController<PokemonList> {
       (right) {
         _nextPage++;
         final newList = state.data..addAll(right);
-        state = _state.successState(newList, empty: right.isEmpty);
+
+        state = _state.successState(
+          newList,
+          empty: right.isEmpty && _state.data.isEmpty,
+        );
       },
     );
   }
