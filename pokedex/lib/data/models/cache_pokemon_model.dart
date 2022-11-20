@@ -8,8 +8,10 @@ class CachePokemonModel extends Equatable {
   final String name;
   final num height;
   final num weight;
+  final num bmi;
   final String sprite;
   final String types;
+  final String color;
 
   const CachePokemonModel({
     required this.stats,
@@ -18,25 +20,32 @@ class CachePokemonModel extends Equatable {
     required this.name,
     required this.height,
     required this.weight,
+    required this.bmi,
     required this.sprite,
+    required this.color,
   });
 
-  CachePokemonModel copyWith(
-      {List<Stat>? stats,
-      int? id,
-      String? name,
-      num? height,
-      num? weight,
-      String? sprite,
-      String? types}) {
+  CachePokemonModel copyWith({
+    List<Stat>? stats,
+    int? id,
+    String? name,
+    num? height,
+    num? weight,
+    num? bmi,
+    String? sprite,
+    String? types,
+    String? color,
+  }) {
     return CachePokemonModel(
       stats: stats ?? this.stats,
       id: id ?? this.id,
       name: name ?? this.name,
       height: height ?? this.height,
       weight: weight ?? this.weight,
+      bmi: bmi ?? this.bmi,
       sprite: sprite ?? this.sprite,
       types: types ?? this.types,
+      color: color ?? this.color,
     );
   }
 
@@ -45,10 +54,12 @@ class CachePokemonModel extends Equatable {
       'stats': stats.map((x) => x.toMap()).toList(),
       'id': id,
       'name': name,
+      'bmi': bmi,
       'height': height,
       'weight': weight,
       'types': types,
       'sprite': sprite,
+      'color': color,
     };
   }
 
@@ -61,16 +72,28 @@ class CachePokemonModel extends Equatable {
       weight: map['weight'] ?? 0,
       sprite: map['sprite'] ?? '',
       types: map['types'] ?? '',
+      color: map['color'] ?? '',
+      bmi: map['bmi'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'CachePokemonModel(stats: $stats, types: $types, id: $id, name: $name, height: $height, weight: $weight, sprite: $sprite)';
+    return 'CachePokemonModel(stats: $stats, types: $types, id: $id, name: $name, bmi: $bmi, height: $height, weight: $weight, sprite: $sprite), color: $color';
   }
 
   @override
-  List<Object?> get props => [id, name, height, weight, sprite, stats, types];
+  List<Object?> get props => [
+        id,
+        name,
+        bmi,
+        height,
+        weight,
+        sprite,
+        stats,
+        types,
+        color,
+      ];
 }
 
 class Stat extends Equatable {
@@ -80,11 +103,11 @@ class Stat extends Equatable {
   });
 
   final String name;
-  final double stat;
+  final num stat;
 
   Stat copyWith({
     String? name,
-    double? stat,
+    num? stat,
   }) {
     return Stat(
       name: name ?? this.name,
@@ -102,7 +125,7 @@ class Stat extends Equatable {
   factory Stat.fromMap(Map<String, dynamic> map) {
     return Stat(
       name: map['name'] ?? '',
-      stat: map['stat']?.toDouble() ?? 0.0,
+      stat: map['stat'] ?? 0,
     );
   }
 

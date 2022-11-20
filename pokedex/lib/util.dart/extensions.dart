@@ -25,6 +25,21 @@ extension NumExt on num {
 extension StringExt on String {
   String get capitilizeFirst =>
       isEmpty ? this : replaceFirst(this[0], this[0].toUpperCase());
+
+  Color get fromHex {
+    final buffer = StringBuffer();
+    if (length == 6 || length == 7) buffer.write('ff');
+    buffer.write(replaceFirst('#', ''));
+    return Color(int.parse(buffer.toString(), radix: 16));
+  }
+}
+
+extension HexColor on Color {
+  String toHex({bool leadingHashSign = true}) => '${leadingHashSign ? '#' : ''}'
+      '${alpha.toRadixString(16).padLeft(2, '0')}'
+      '${red.toRadixString(16).padLeft(2, '0')}'
+      '${green.toRadixString(16).padLeft(2, '0')}'
+      '${blue.toRadixString(16).padLeft(2, '0')}';
 }
 
 extension PokemonEntityExt on PokemonEntity {

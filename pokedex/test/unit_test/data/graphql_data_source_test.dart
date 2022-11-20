@@ -102,6 +102,8 @@ void main() {
             name: "pokemon",
             height: 40,
             weight: 80,
+            bmi: 120,
+            color: "#000",
             sprite: 'sprite.svg',
           );
 
@@ -123,6 +125,8 @@ void main() {
             name: "pokemon",
             height: 40,
             weight: 80,
+            bmi: 120,
+            color: "#000",
             sprite: 'sprite.svg',
           ).toMap();
 
@@ -133,6 +137,8 @@ void main() {
             name: "pokemon",
             height: 40,
             weight: 180,
+            bmi: 120,
+            color: "#000",
             sprite: 'dsd_sprite.svg',
           );
 
@@ -153,6 +159,8 @@ void main() {
             name: "pokemon",
             height: 40,
             weight: 80,
+            bmi: 120,
+            color: "#000",
             sprite: 'sprite.svg',
           ).toMap();
 
@@ -168,6 +176,8 @@ void main() {
                 name: "pokemon",
                 height: 40,
                 weight: 80,
+                bmi: 120,
+                color: "#000",
                 sprite: 'sprite.svg',
               ),
             ],
