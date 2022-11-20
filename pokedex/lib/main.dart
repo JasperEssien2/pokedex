@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/data/fake_repository.dart';
+import 'package:pokedex/data/data_sources/graphql_data_source.dart';
+import 'package:pokedex/data/repository_impl.dart';
 import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/data_provider.dart';
@@ -8,9 +9,10 @@ import 'package:pokedex/presentation/home_screen.dart';
 import 'package:pokedex/util.dart/colors.dart';
 
 void main() {
-  runApp(MyApp(
-    repository: FakeRepository(),
-  ));
+  final dataSource = GraphQlDataSource();
+  final repository = RepositoryImpl(dataSource: dataSource);
+
+  runApp(MyApp(repository: repository));
 }
 
 class MyApp extends StatefulWidget {

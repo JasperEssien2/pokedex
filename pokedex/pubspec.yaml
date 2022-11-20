@@ -22,6 +22,7 @@ dependencies:
   flutter_svg: ^1.1.6
   either_dart: ^0.3.0
   graphql: ^5.1.1
+
  
 dev_dependencies:
   flutter_test:

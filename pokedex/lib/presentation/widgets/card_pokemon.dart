@@ -27,7 +27,7 @@ class PokedexCard extends StatelessWidget {
 
     return AnimatableParent(
       index: index,
-     delayMilliseconds: 30,
+      delayMilliseconds: 30,
       performAnimation: animate,
       child: GestureDetector(
         onTap: () => Navigator.push(
