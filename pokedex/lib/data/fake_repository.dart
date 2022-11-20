@@ -10,8 +10,6 @@ class FakeRepository implements RepositoryBase {
   @override
   Future<Either<String, PokemonList>> fetchPokemons(
       {required int offset, int limit = 20}) async {
-    await Future.delayed(const Duration(milliseconds: 800));
-
     if (returnSuccess) {
       return Right(offset > 1
           ? nextList ?? []
@@ -34,11 +32,12 @@ class FakeRepository implements RepositoryBase {
   Future<Either<String, PokemonList>> fetchFavouritePokemons() async {
     if (returnSuccess) {
       return Right(
-       returnList ?? List.generate(
-          20,
-          (index) =>
-              PokemonEntity.dummy().copyWith(id: index, isFavourited: true),
-        ),
+        returnList ??
+            List.generate(
+              20,
+              (index) =>
+                  PokemonEntity.dummy().copyWith(id: index, isFavourited: true),
+            ),
       );
     } else {
       return const Left("An error occurred");

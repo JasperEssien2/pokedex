@@ -58,19 +58,23 @@ class HomeScreenTestCases {
 
     await _allPokemonFetch(context, tester);
 
+    context.pokemonController.state = UIState(data: [], loading: true);
+
+    await tester.pump(const Duration(milliseconds: 20));
+
     expect(find.byType(BottomLoadingWidget), findsOneWidget);
+    expect(find.byType(GridView), findsOneWidget);
 
     expect(find.byType(PokedexCardShimmer), findsNothing);
     expect(find.byType(InfoWidget), findsNothing);
-    expect(find.byType(GridView), findsNothing);
   }
 
   Future<void> testAllPokemonEmptyState(WidgetTester tester) async {
+    repository.returnList = [];
+
     await TestUtils.pumpApp(tester, repository: repository);
 
     final context = tester.state(find.byType(HomeScreen)).context;
-
-    repository.returnList = [];
 
     await _allPokemonFetch(context, tester);
 
@@ -88,9 +92,11 @@ class HomeScreenTestCases {
       PokemonEntity.dummy().copyWith(id: 5)
     ];
 
-    repository.returnList = newList;
+    repository.nextList = newList;
 
     await tester.tap(find.text("Retry"));
+
+    await tester.pumpAndSettle();
 
     for (var item in newList) {
       expect(find.byKey(ValueKey(item)), findsOneWidget);
@@ -100,21 +106,21 @@ class HomeScreenTestCases {
   }
 
   Future<void> testAllPokemonSubsequentEmptyState(WidgetTester tester) async {
-    await TestUtils.pumpApp(tester, repository: repository);
-
-    final context = tester.state(find.byType(HomeScreen)).context;
-
- repository.returnList = [
+    repository.returnList = [
       PokemonEntity.dummy().copyWith(id: 12),
       PokemonEntity.dummy().copyWith(id: 92),
     ];
+
+    await TestUtils.pumpApp(tester, repository: repository);
+
+    final context = tester.state(find.byType(HomeScreen)).context;
 
     await _allPokemonFetch(context, tester);
 
     repository.nextList = [];
 
     await _allPokemonFetch(context, tester);
-  
+
     for (var item in repository.nextList!) {
       expect(find.byKey(ValueKey(item)), findsWidgets);
     }
@@ -123,14 +129,14 @@ class HomeScreenTestCases {
   }
 
   Future<void> testAllPokemonSuccessState(WidgetTester tester) async {
-    await TestUtils.pumpApp(tester, repository: repository);
-
     final newList = [
       PokemonEntity.dummy(),
       PokemonEntity.dummy().copyWith(id: 5)
     ];
 
     repository.returnList = newList;
+
+    await TestUtils.pumpApp(tester, repository: repository);
 
     for (var item in newList) {
       expect(find.byKey(ValueKey(item)), findsOneWidget);
@@ -140,11 +146,11 @@ class HomeScreenTestCases {
   }
 
   Future<void> testAllPokemonErrorState(WidgetTester tester) async {
+    repository.returnSuccess = false;
+
     await TestUtils.pumpApp(tester, repository: repository);
 
     final context = tester.state(find.byType(HomeScreen)).context;
-
-    repository.returnSuccess = false;
 
     await _allPokemonFetch(context, tester);
 
@@ -152,12 +158,20 @@ class HomeScreenTestCases {
   }
 
   Future<void> testPagination(WidgetTester tester) async {
-    await TestUtils.pumpApp(tester, repository: repository);
-
     repository.nextList = [
-      PokemonEntity.dummy().copyWith(id: 12),
+      PokemonEntity.dummy().copyWith(id: 42),
       PokemonEntity.dummy().copyWith(id: 92),
     ];
+
+    repository.returnList =
+        List.generate(15, (index) => PokemonEntity.dummy().copyWith(id: index));
+
+    await TestUtils.pumpApp(tester, repository: repository);
+
+    final context = tester.state(find.byType(HomeScreen)).context;
+
+    tester.printToConsole(
+        "DATA ============ ${context.pokemonController.state.data.where((element) => element.id == 14).toList()}");
 
     for (var item in repository.nextList!) {
       expect(find.byKey(ValueKey(item)), findsNothing);
@@ -165,9 +179,12 @@ class HomeScreenTestCases {
 
     await TestUtils.scrollWidget(
       tester,
-      visibleKey: ValueKey(PokemonEntity.dummy().copyWith(id: 19)),
+      visibleKey: ValueKey(PokemonEntity.dummy().copyWith(id: 14)),
     );
 
+    for (var item in repository.returnList!) {
+      expect(find.byKey(ValueKey(item)), findsOneWidget);
+    }
     for (var item in repository.nextList!) {
       expect(find.byKey(ValueKey(item)), findsOneWidget);
     }
@@ -189,19 +206,23 @@ class HomeScreenTestCases {
   }
 
   Future<void> testFavouritePokemonEmptyState(WidgetTester tester) async {
+    repository.returnList = [];
+
     await TestUtils.pumpApp(tester, repository: repository);
 
     await _navigateToSecondTab(tester);
 
     final context = tester.state(find.byType(HomeScreen)).context;
 
-    repository.returnList = [];
-
     context.favouritePokemonController.fetch();
+
+    await tester.pump(const Duration(milliseconds: 20));
 
     expect(
       findInfoWidget(
-          text: 'No favourite pokemons yet', buttonText: 'Add Favourite'),
+        text: 'No favourite pokemons yet',
+        buttonText: 'Add Favourite',
+      ),
       findsOneWidget,
     );
 
@@ -219,10 +240,6 @@ class HomeScreenTestCases {
   }
 
   Future<void> testFavouritePokemonSuccessState(WidgetTester tester) async {
-    await _navigateToSecondTab(tester);
-
-    await TestUtils.pumpApp(tester, repository: repository);
-
     final newList = [
       PokemonEntity.dummy().copyWith(isFavourited: true),
       PokemonEntity.dummy().copyWith(id: 5, isFavourited: true),
@@ -230,6 +247,10 @@ class HomeScreenTestCases {
     ];
 
     repository.returnList = newList;
+
+    await TestUtils.pumpApp(tester, repository: repository);
+
+    await _navigateToSecondTab(tester);
 
     for (var item in newList) {
       expect(find.byKey(ValueKey(item)), findsOneWidget);
@@ -241,11 +262,11 @@ class HomeScreenTestCases {
   }
 
   Future<void> testFavouritePokemonErrorState(WidgetTester tester) async {
+    repository.returnSuccess = false;
+
     await TestUtils.pumpApp(tester, repository: repository);
 
     final context = tester.state(find.byType(HomeScreen)).context;
-
-    repository.returnSuccess = false;
 
     await _navigateToSecondTab(tester);
 
@@ -292,10 +313,10 @@ class HomeScreenTestCases {
   }
 
   void _expectOnlyLoadingWidgets() {
+    expect(find.byType(GridView), findsOneWidget);
     expect(find.byType(PokedexCardShimmer), findsAtLeastNWidgets(9));
     expect(find.byType(BottomLoadingWidget), findsNothing);
     expect(find.byType(InfoWidget), findsNothing);
-    expect(find.byType(GridView), findsNothing);
   }
 
   Future<void> _navigateToSecondTab(WidgetTester tester) async {
@@ -308,7 +329,7 @@ class HomeScreenTestCases {
       BuildContext context, WidgetTester tester) async {
     context.pokemonController.fetch();
 
-    await tester.pump(const Duration(milliseconds: 20));
+    await tester.pumpAndSettle();
   }
 
   Future<void> _favouritePokemonFetch(

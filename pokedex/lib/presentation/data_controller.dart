@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/domain/repository_base.dart';
 
 class UIState<T> implements EquatableMixin {
@@ -94,11 +95,13 @@ class PokemonDataController extends BaseDataController<PokemonList> {
       (left) => state = _state.errorState(left),
       (right) {
         _nextPage++;
-        final newList = state.data..addAll(right);
+
+        final newList = List<PokemonEntity>.from(state.data).toList()
+          ..addAll(right);
 
         state = _state.successState(
           newList,
-          empty: right.isEmpty && _state.data.isEmpty,
+          empty: newList.isEmpty,
         );
       },
     );
@@ -120,7 +123,7 @@ class FavoritePokenDataController extends BaseDataController<PokemonList> {
 
     result.fold(
       (left) => state = _state.errorState(left),
-      (right) => state = _state.successState(right),
+      (right) => state = _state.successState(right, empty: right.isEmpty),
     );
   }
 }

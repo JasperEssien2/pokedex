@@ -21,38 +21,40 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: DefaultTabController(
         length: 2,
-        child: Column(
-          children: [
-            Container(
-              margin: const EdgeInsets.only(top: 2),
-              color: Colors.white,
-              child: const _TabBar(),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: TabBarView(
-                  children: [
-                    PokemonGridView<PokemonDataController>.pokemons(
-                      listenable:
-                          context.dataController<FavoritePokenDataController>(),
-                    ),
-                    PokemonGridView<
-                        FavoritePokenDataController>.favouritedPokemons(
-                      emptyStateTapped: () => _moveToFirstTab(context),
-                    ),
-                  ],
-                ),
+        child: Builder(builder: (context) {
+          return Column(
+            children: [
+              Container(
+                margin: const EdgeInsets.only(top: 2),
+                color: Colors.white,
+                child: const _TabBar(),
               ),
-            )
-          ],
-        ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: TabBarView(
+                    children: [
+                      PokemonGridView<PokemonDataController>.pokemons(
+                        listenable: context
+                            .dataController<FavoritePokenDataController>(),
+                      ),
+                      PokemonGridView<
+                          FavoritePokenDataController>.favouritedPokemons(
+                        emptyStateTapped: () => _moveToFirstTab(context),
+                      ),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          );
+        }),
       ),
     );
   }
 
   void _moveToFirstTab(BuildContext context) {
-    return DefaultTabController.of(context)!.animateTo(
+    DefaultTabController.of(context)!.animateTo(
       0,
       duration: const Duration(milliseconds: 300),
     );

@@ -25,4 +25,3 @@ class _InfoWidgetFinder extends MatchFinder {
     return false;
   }
 }
-

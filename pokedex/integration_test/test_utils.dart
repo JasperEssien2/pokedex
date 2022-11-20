@@ -43,9 +43,15 @@ class TestUtils {
     WidgetTester tester, {
     required Key visibleKey,
   }) async {
-    await tester.scrollUntilVisible(find.byKey(visibleKey), 100);
+    await tester.scrollUntilVisible(
+      find.byKey(visibleKey),
+      500.0,
+      scrollable: find.byType(Scrollable),
+    );
 
     await tester.pumpAndSettle();
+
+    await Future.delayed(Duration(seconds: 2));
   }
 }
 
