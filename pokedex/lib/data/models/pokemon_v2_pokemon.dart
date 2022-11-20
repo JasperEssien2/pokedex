@@ -9,8 +9,8 @@ class PokemonV2Pokemon extends Equatable {
   final String? name;
   final List<PokemonV2Pokemonstat>? pokemonV2Pokemonstats;
   final String? pokemonV2Pokemonsprites;
-  final int? height;
-  final int? weight;
+  final num? height;
+  final num? weight;
 
   const PokemonV2Pokemon({
     this.id,
@@ -38,9 +38,11 @@ class PokemonV2Pokemon extends Equatable {
     final spriteString =
         ((data['pokemon_v2_pokemonsprites'] as List).first as Map)['sprites'];
 
-    final sprites = jsonDecode(spriteString) as Map<String, String>;
+    final sprites = jsonDecode(spriteString);
 
-    return sprites["front_default"];
+    
+
+    return sprites["other"]["dream_world"]["front_default"];
   }
 
   Map<String, dynamic> toMap() => {
@@ -70,8 +72,8 @@ class PokemonV2Pokemon extends Equatable {
     String? name,
     List<PokemonV2Pokemonstat>? pokemonV2Pokemonstats,
     String? pokemonV2Pokemonsprites,
-    int? height,
-    int? weight,
+    num? height,
+    num? weight,
   }) {
     return PokemonV2Pokemon(
       id: id ?? this.id,

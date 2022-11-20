@@ -5,7 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'pokemon_v2_stat.dart';
 
 class PokemonV2Pokemonstat extends Equatable {
-  final int? baseStat;
+  final num? baseStat;
   final PokemonV2Stat? pokemonV2Stat;
 
   const PokemonV2Pokemonstat({this.baseStat, this.pokemonV2Stat});
@@ -39,7 +39,7 @@ class PokemonV2Pokemonstat extends Equatable {
   String toJson() => json.encode(toMap());
 
   PokemonV2Pokemonstat copyWith({
-    int? baseStat,
+    num? baseStat,
     PokemonV2Stat? pokemonV2Stat,
   }) {
     return PokemonV2Pokemonstat(

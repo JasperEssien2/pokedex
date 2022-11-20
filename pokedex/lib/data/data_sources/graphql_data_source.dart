@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
@@ -21,52 +19,93 @@ class GraphQlDataSource with GraphQLQueriesText {
     if (_client == null) {
       final store = await HiveStore.open();
 
-      _client =
-          GraphQLClient(link: _httpLink, cache: GraphQLCache(store: store));
+      _client = GraphQLClient(
+        link: _httpLink,
+        cache: GraphQLCache(store: store),
+      );
     }
     return _client!;
   }
 
-  Future<Either<String, PokemonModel>> fetchPokenData({
+  Future<Either<String, PokemonModel>> queryPokemonData({
     required int offset,
     int limit = 20,
   }) async {
     final client = await getClient();
 
     final options = QueryOptions(
-      document: gql(
-        fetchPokemonQueryString(limit: limit, offset: offset),
-      ),
+      document: gql(fetchPokemonQueryString),
       variables: {
         'limit': limit,
         'offset': offset,
       },
-      parserFn: (data) => PokemonModel.fromMap(data),
+      parserFn: (data) {
+        return PokemonModel.fromMap(data["data"]);
+      },
     );
 
     final result = await client.query<PokemonModel>(options);
 
     if (result.hasException) {
-      log("GRAPHQL ERROR ============ ${result.exception?.graphqlErrors.map((e) => "${e.message}\n").toList()}");
-      log("LINK ERROR ============ ${result.exception?.linkException.toString()}");
-      return Left(result.exception.toString());
+      final graphqlErrors = result.exception!.graphqlErrors;
+
+      String errorBuilder = "";
+
+      for (var error in graphqlErrors) {
+        errorBuilder += "${error.message}\n";
+      }
+
+      if (errorBuilder.isEmpty) {
+        errorBuilder = "An error occurred, please try again";
+      }
+      return Left(errorBuilder);
     }
 
-    return Right(result.parsedData!);
+    return Right(result.parserFn(result.data!['data']!));
   }
 
-  // Future<Either<String, List<CachePokemonModel>>> queryFavouritePokemon(
-  //     CachePokemonModel model) {}
+  Future<Either<String, List<CachePokemonModel>>> mutateFavouritePokemon(
+      CachePokemonModel model) async {
+    final client = await getClient();
 
-  // Future<Either<String, List<CachePokemonModel>>> fetchFavouritePokemon(
-  //     CachePokemonModel model) {}
+    final store = client.cache.store;
+
+    final id = model.id.toString();
+
+    final pokemon = store.get(id);
+
+    if (pokemon == null) {
+      store.put(id, model.toMap());
+    } else {
+      store.delete(id);
+    }
+
+    return queryFavouritePokemon();
+  }
+
+  Future<Either<String, List<CachePokemonModel>>>
+      queryFavouritePokemon() async {
+    try {
+      final client = await getClient();
+
+      final list = <CachePokemonModel>[];
+
+      client.cache.store.toMap().forEach((key, value) {
+        list.add(CachePokemonModel.fromMap(value!));
+      });
+
+      return Right(list);
+    } catch (e) {
+      return const Left("An error occurred fetching favourite pokemons");
+    }
+  }
 }
 
 mixin GraphQLQueriesText {
-  String fetchPokemonQueryString({required int limit, required int offset}) {
+  String get fetchPokemonQueryString {
     return """
-  query samplePokeAPIquery {
-    pokemon_v2_pokemon(limit: $limit, offset: $offset) {
+  query samplePokeAPIquery(\$limit: Int!, \$offset: Int!) {
+    pokemon_v2_pokemon(limit: \$limit, offset: \$offset) {
       id
       name
       pokemon_v2_pokemonstats {
