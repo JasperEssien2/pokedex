@@ -18,11 +18,6 @@ class PokemonV2Pokemonstat extends Equatable {
     );
   }
 
-  Map<String, dynamic> toMap() => {
-        'base_stat': baseStat,
-        'pokemon_v2_stat': pokemonV2Stat?.toMap(),
-      };
-
   PokemonV2Pokemonstat copyWith({
     num? baseStat,
     PokemonV2Stat? pokemonV2Stat,

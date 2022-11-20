@@ -43,16 +43,6 @@ class PokemonV2Pokemon extends Equatable {
     return sprites["other"]["dream_world"]["front_default"];
   }
 
-  Map<String, dynamic> toMap() => {
-        'id': id,
-        'name': name,
-        'pokemon_v2_pokemonstats':
-            pokemonV2Pokemonstats?.map((e) => e.toMap()).toList(),
-        'pokemon_v2_pokemonsprites': pokemonV2Pokemonsprites,
-        'height': height,
-        'weight': weight,
-      };
-
   PokemonV2Pokemon copyWith({
     int? id,
     String? name,

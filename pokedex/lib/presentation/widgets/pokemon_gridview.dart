@@ -5,44 +5,6 @@ import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
-class FavouritedCountChip extends StatelessWidget {
-  const FavouritedCountChip({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: context.favouritePokemonController,
-      builder: (context, _) {
-        final state = context.favouritePokemonController.state;
-
-        if (state.data.isNotEmpty) {
-          return CircleAvatar(
-            radius: 12,
-            backgroundColor: Theme.of(context).primaryColor,
-            child: FittedBox(
-              child: Padding(
-                padding: const EdgeInsets.all(2.0),
-                child: Text(
-                 
-                  "${state.data.length}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 11,
-                  ),
-                ),
-              ),
-            ),
-          );
-        } else {
-          return const SizedBox.shrink();
-        }
-      },
-    );
-  }
-}
-
 class PokemonGridView<T extends BaseDataController<PokemonList>>
     extends StatefulWidget {
   const PokemonGridView({
@@ -186,6 +148,43 @@ class BottomLoadingWidget extends StatelessWidget {
     return const Padding(
       padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
       child: LinearProgressIndicator(minHeight: 6),
+    );
+  }
+}
+
+class FavouritedCountChip extends StatelessWidget {
+  const FavouritedCountChip({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: context.favouritePokemonController,
+      builder: (context, _) {
+        final state = context.favouritePokemonController.state;
+
+        if (state.data.isNotEmpty) {
+          return CircleAvatar(
+            radius: 12,
+            backgroundColor: Theme.of(context).primaryColor,
+            child: FittedBox(
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Text(
+                  "${state.data.length}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 11,
+                  ),
+                ),
+              ),
+            ),
+          );
+        } else {
+          return const SizedBox.shrink();
+        }
+      },
     );
   }
 }

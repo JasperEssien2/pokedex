@@ -13,10 +13,6 @@ class PokemonModel extends Equatable {
             .toList(),
       );
 
-  Map<String, dynamic> toMap() => {
-        'pokemon_v2_pokemon': pokemonV2Pokemon?.map((e) => e.toMap()).toList(),
-      };
-
   PokemonModel copyWith({
     List<PokemonV2Pokemon>? pokemonV2Pokemon,
   }) {

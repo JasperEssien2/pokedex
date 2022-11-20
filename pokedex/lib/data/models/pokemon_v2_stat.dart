@@ -9,10 +9,6 @@ class PokemonV2Stat extends Equatable {
         name: data['name'] as String?,
       );
 
-  Map<String, dynamic> toMap() => {
-        'name': name,
-      };
-
   PokemonV2Stat copyWith({
     String? name,
   }) {
