@@ -7,7 +7,7 @@ import 'package:pokedex/data/models/pokemon_model.dart';
 class GraphQlDataSource with GraphQLQueriesText {
   final _httpLink = HttpLink('https://beta.pokeapi.co/graphql/v1beta');
 
-  late GraphQLClient? _client;
+  GraphQLClient? _client;
 
   @visibleForTesting
   set client(GraphQLClient? value) {
@@ -15,9 +15,10 @@ class GraphQlDataSource with GraphQLQueriesText {
   }
 
   @visibleForTesting
-  Future<GraphQLClient> getClient() async {
+  Future<GraphQLClient> getClient(
+      {@visibleForTesting HiveStore? hiveStore}) async {
     if (_client == null) {
-      final store = await HiveStore.open();
+      final store = hiveStore ?? await HiveStore.open();
 
       _client = GraphQLClient(
         link: _httpLink,
@@ -47,21 +48,26 @@ class GraphQlDataSource with GraphQLQueriesText {
     final result = await client.query<PokemonModel>(options);
 
     if (result.hasException) {
-      final graphqlErrors = result.exception!.graphqlErrors;
-
-      String errorBuilder = "";
-
-      for (var error in graphqlErrors) {
-        errorBuilder += "${error.message}\n";
-      }
-
-      if (errorBuilder.isEmpty) {
-        errorBuilder = "An error occurred, please try again";
-      }
+      String errorBuilder = _buildErrorFromGraphQLErrors(result);
       return Left(errorBuilder);
     }
 
     return Right(result.parserFn(result.data!['data']!));
+  }
+
+  String _buildErrorFromGraphQLErrors(QueryResult<PokemonModel> result) {
+    final graphqlErrors = result.exception!.graphqlErrors;
+
+    String errorBuilder = "";
+
+    for (var error in graphqlErrors) {
+      errorBuilder += "${error.message}\n";
+    }
+
+    if (errorBuilder.isEmpty) {
+      errorBuilder = "An error occurred, please try again";
+    }
+    return errorBuilder;
   }
 
   Future<Either<String, List<CachePokemonModel>>> mutateFavouritePokemon(

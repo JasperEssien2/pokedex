@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:graphql/client.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:pokedex/data/data_sources/graphql_data_source.dart';
+import 'package:pokedex/data/models/cache_pokemon_model.dart';
 import 'package:pokedex/data/models/pokemon_model.dart';
 import 'package:pokedex/data/models/pokemon_v2_pokemon.dart';
 import 'package:pokedex/data/models/pokemon_v2_pokemonstat.dart';
@@ -10,6 +11,8 @@ import 'package:pokedex/data/models/pokemon_v2_stat.dart';
 class MockedGraphQLClient extends Mock implements GraphQLClient {}
 
 class FakeQueryOptions extends Fake implements QueryOptions<PokemonModel> {}
+
+class MockedHiveStore extends Mock implements HiveStore {}
 
 void main() {
   registerFallbackValue(FakeQueryOptions());
@@ -31,7 +34,7 @@ void main() {
   );
 
   group(
-    "Test fetchPokenData()",
+    "Test queryPokenData()",
     () {
       test(
         " Ensure that clients return data when successful",
@@ -78,6 +81,112 @@ void main() {
 
           expect(result.left, "An error occurred, please try again");
           expect(() => result.right, throwsException);
+        },
+      );
+    },
+  );
+
+  group(
+    "Test mutateFavouritePokemon()",
+    () {
+      test(
+        "Ensure pokemon is added, when data doesn't exist",
+        () async {
+          dataSource.client = client;
+
+          const cacheModel = CachePokemonModel(
+            stats: [Stat(name: "attack", stat: 80)],
+            id: 6,
+            name: "pokemon",
+            height: 40,
+            weight: 80,
+            sprite: 'sprite.svg',
+          );
+
+          final result = await dataSource.mutateFavouritePokemon(cacheModel);
+
+          expect(result.right, [cacheModel.copyWith()]);
+        },
+      );
+
+      test(
+        "Ensure pokemon is deleted, when data with same ID already exist",
+        () async {
+          dataSource.client = client;
+
+          cacheMap["6"] = const CachePokemonModel(
+            stats: [Stat(name: "attack", stat: 80)],
+            id: 6,
+            name: "pokemon",
+            height: 40,
+            weight: 80,
+            sprite: 'sprite.svg',
+          ).toMap();
+
+          const cacheModel = CachePokemonModel(
+            stats: [Stat(name: "attack", stat: 80)],
+            id: 6,
+            name: "pokemon",
+            height: 40,
+            weight: 180,
+            sprite: 'dsd_sprite.svg',
+          );
+
+          final result = await dataSource.mutateFavouritePokemon(cacheModel);
+
+          expect(result.right, []);
+        },
+      );
+
+      test(
+        "Ensure cached pokemon is returned, when queryFavouritePokemon()",
+        () async {
+          dataSource.client = client;
+          cacheMap["6"] = const CachePokemonModel(
+            stats: [Stat(name: "attack", stat: 80)],
+            id: 6,
+            name: "pokemon",
+            height: 40,
+            weight: 80,
+            sprite: 'sprite.svg',
+          ).toMap();
+
+          final result = await dataSource.queryFavouritePokemon();
+
+          expect(
+            result.right,
+            [
+              const CachePokemonModel(
+                stats: [Stat(name: "attack", stat: 80)],
+                id: 6,
+                name: "pokemon",
+                height: 40,
+                weight: 80,
+                sprite: 'sprite.svg',
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+
+  group(
+    "Test getClient()",
+    () {
+      test(
+        "Ensure getClient() is initiated when null",
+        () async {
+          final client = await dataSource.getClient(
+            hiveStore: MockedHiveStore(),
+          );
+
+          expect(client, isNotNull);
+
+          expect(
+            client.link,
+            isA<HttpLink>(),
+          );
         },
       );
     },
