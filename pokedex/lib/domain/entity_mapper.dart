@@ -2,9 +2,14 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pokedex/data/models/cache_pokemon_model.dart';
+import 'package:pokedex/data/models/pokemon_model.dart';
 import 'package:pokedex/data/models/pokemon_v2_pokemon.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
+import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/util.dart/extensions.dart';
+
+final modelToEntityMapper = _ModelToEntityMapper();
+final cacheModelToEntityMapper = _CacheModelToEntityMapper();
 
 abstract class EntityMapper<M, E> {
   M fromEntity(E entity);
@@ -12,7 +17,7 @@ abstract class EntityMapper<M, E> {
   E toEntity(M model);
 }
 
-class ModelToEntityMapper
+class _ModelToEntityMapper
     extends EntityMapper<PokemonV2Pokemon, PokemonEntity> {
   @override
   PokemonV2Pokemon fromEntity(PokemonEntity entity) =>
@@ -45,7 +50,7 @@ class ModelToEntityMapper
   }
 }
 
-class CacheModelToEntityMapper
+class _CacheModelToEntityMapper
     extends EntityMapper<CachePokemonModel, PokemonEntity> {
   @override
   CachePokemonModel fromEntity(PokemonEntity entity) {
@@ -85,4 +90,20 @@ Color get randomColorGenerator {
   const colors = Colors.primaries;
 
   return colors[Random().nextInt(colors.length)].withOpacity(.15);
+}
+
+extension PokemonModelExt on PokemonModel {
+  PokemonList get pokemonEntityList =>
+      pokemonV2Pokemon?.map((e) => modelToEntityMapper.toEntity(e)).toList() ??
+      [];
+}
+
+extension CachePokemonExt on List<CachePokemonModel> {
+  PokemonList get pokemonEntityList =>
+      map((e) => cacheModelToEntityMapper.toEntity(e)).toList();
+}
+
+extension PokemonEntityExt on PokemonEntity {
+  CachePokemonModel get cachePokemonModel =>
+      cacheModelToEntityMapper.fromEntity(this);
 }
