@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 class PokemonV2Stat extends Equatable {
@@ -14,18 +12,6 @@ class PokemonV2Stat extends Equatable {
   Map<String, dynamic> toMap() => {
         'name': name,
       };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [PokemonV2Stat].
-  factory PokemonV2Stat.fromJson(String data) {
-    return PokemonV2Stat.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [PokemonV2Stat] to a JSON string.
-  String toJson() => json.encode(toMap());
 
   PokemonV2Stat copyWith({
     String? name,

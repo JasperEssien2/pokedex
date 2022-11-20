@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 import 'pokemon_v2_pokemon.dart';
@@ -18,19 +16,6 @@ class PokemonModel extends Equatable {
   Map<String, dynamic> toMap() => {
         'pokemon_v2_pokemon': pokemonV2Pokemon?.map((e) => e.toMap()).toList(),
       };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [PokemonModel].
-  factory PokemonModel.fromJson(String data) {
-    return PokemonModel.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [PokemonModel] to a JSON string.
-  String toJson() => json.encode(toMap());
-
 
   PokemonModel copyWith({
     List<PokemonV2Pokemon>? pokemonV2Pokemon,

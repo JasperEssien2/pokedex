@@ -40,8 +40,6 @@ class PokemonV2Pokemon extends Equatable {
 
     final sprites = jsonDecode(spriteString);
 
-    
-
     return sprites["other"]["dream_world"]["front_default"];
   }
 
@@ -54,18 +52,6 @@ class PokemonV2Pokemon extends Equatable {
         'height': height,
         'weight': weight,
       };
-
-  /// `dart:convert`
-  ///
-  /// Parses the string and returns the resulting Json object as [PokemonV2Pokemon].
-  factory PokemonV2Pokemon.fromJson(String data) {
-    return PokemonV2Pokemon.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
-
-  /// `dart:convert`
-  ///
-  /// Converts [PokemonV2Pokemon] to a JSON string.
-  String toJson() => json.encode(toMap());
 
   PokemonV2Pokemon copyWith({
     int? id,

@@ -59,11 +59,6 @@ class CachePokemonModel extends Equatable {
     );
   }
 
-  String toJson() => json.encode(toMap());
-
-  factory CachePokemonModel.fromJson(String source) =>
-      CachePokemonModel.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'CachePokemonModel(stats: $stats, id: $id, name: $name, height: $height, weight: $weight, sprite: $sprite)';
