@@ -96,6 +96,7 @@ void main() {
           dataSource.client = client;
 
           const cacheModel = CachePokemonModel(
+            types: "Poison",
             stats: [Stat(name: "attack", stat: 80)],
             id: 6,
             name: "pokemon",
@@ -116,6 +117,7 @@ void main() {
           dataSource.client = client;
 
           cacheMap["6"] = const CachePokemonModel(
+            types: "Poison",
             stats: [Stat(name: "attack", stat: 80)],
             id: 6,
             name: "pokemon",
@@ -125,6 +127,7 @@ void main() {
           ).toMap();
 
           const cacheModel = CachePokemonModel(
+            types: "Poison",
             stats: [Stat(name: "attack", stat: 80)],
             id: 6,
             name: "pokemon",
@@ -144,6 +147,7 @@ void main() {
         () async {
           dataSource.client = client;
           cacheMap["6"] = const CachePokemonModel(
+            types: "Poison",
             stats: [Stat(name: "attack", stat: 80)],
             id: 6,
             name: "pokemon",
@@ -158,6 +162,7 @@ void main() {
             result.right,
             [
               const CachePokemonModel(
+                types: "Poison",
                 stats: [Stat(name: "attack", stat: 80)],
                 id: 6,
                 name: "pokemon",

@@ -9,9 +9,11 @@ class CachePokemonModel extends Equatable {
   final num height;
   final num weight;
   final String sprite;
+  final String types;
 
   const CachePokemonModel({
     required this.stats,
+    required this.types,
     required this.id,
     required this.name,
     required this.height,
@@ -19,14 +21,14 @@ class CachePokemonModel extends Equatable {
     required this.sprite,
   });
 
-  CachePokemonModel copyWith({
-    List<Stat>? stats,
-    int? id,
-    String? name,
-    num? height,
-    num? weight,
-    String? sprite,
-  }) {
+  CachePokemonModel copyWith(
+      {List<Stat>? stats,
+      int? id,
+      String? name,
+      num? height,
+      num? weight,
+      String? sprite,
+      String? types}) {
     return CachePokemonModel(
       stats: stats ?? this.stats,
       id: id ?? this.id,
@@ -34,6 +36,7 @@ class CachePokemonModel extends Equatable {
       height: height ?? this.height,
       weight: weight ?? this.weight,
       sprite: sprite ?? this.sprite,
+      types: types ?? this.types,
     );
   }
 
@@ -44,6 +47,7 @@ class CachePokemonModel extends Equatable {
       'name': name,
       'height': height,
       'weight': weight,
+      'types': types,
       'sprite': sprite,
     };
   }
@@ -56,16 +60,17 @@ class CachePokemonModel extends Equatable {
       height: map['height'] ?? 0,
       weight: map['weight'] ?? 0,
       sprite: map['sprite'] ?? '',
+      types: map['types'] ?? '',
     );
   }
 
   @override
   String toString() {
-    return 'CachePokemonModel(stats: $stats, id: $id, name: $name, height: $height, weight: $weight, sprite: $sprite)';
+    return 'CachePokemonModel(stats: $stats, types: $types, id: $id, name: $name, height: $height, weight: $weight, sprite: $sprite)';
   }
 
   @override
-  List<Object?> get props => [id, name, height, weight, sprite, stats];
+  List<Object?> get props => [id, name, height, weight, sprite, stats, types];
 }
 
 class Stat extends Equatable {
