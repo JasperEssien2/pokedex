@@ -47,14 +47,14 @@ extension PokemonEntityExt on PokemonEntity {
 }
 
 extension PokemonModelExt on PokemonV2Pokemon {
-  num get bmi => weight! / math.pow(height!, 2);
+  num get bmi => (weight! / math.pow(height!, 2)).round();
 
-  num get avgPower =>
-      stats!
-          .reduce((value, element) => PokemonV2PokemonStat(
-              baseStat: value.baseStat! + element.baseStat!))
-          .baseStat! /
-      6;
+  num get avgPower => (stats!
+              .reduce((value, element) => PokemonV2PokemonStat(
+                  baseStat: value.baseStat! + element.baseStat!))
+              .baseStat! /
+          6)
+      .round();
 }
 
 extension BuildContextExt on BuildContext {

@@ -92,7 +92,6 @@ class CachePokemonModel extends Equatable {
         sprite,
         stats,
         types,
-        color,
       ];
 }
 

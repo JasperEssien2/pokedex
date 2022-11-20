@@ -14,14 +14,14 @@ class RepositoryImpl extends RepositoryBase {
     final result =
         await _dataSource.queryPokemonData(offset: offset, limit: limit);
 
-    return result.map((right) => right.pokemonEntityList);
+    return result.map<PokemonList>((right) => right.pokemonEntityList);
   }
 
   @override
   Future<Either<String, PokemonList>> fetchFavouritePokemons() async {
     final result = await _dataSource.queryFavouritePokemon();
 
-    return result.map((right) => right.pokemonEntityList);
+    return result.map<PokemonList>((right) => right.pokemonEntityList);
   }
 
   @override
@@ -30,6 +30,6 @@ class RepositoryImpl extends RepositoryBase {
     final result =
         await _dataSource.mutateFavouritePokemon(entity.cachePokemonModel);
 
-    return result.map((right) => right.pokemonEntityList);
+    return result.map<PokemonList>((right) => right.pokemonEntityList);
   }
 }

@@ -1,8 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 
-class PokemonEntity implements EquatableMixin {
-  PokemonEntity({
+class PokemonEntity extends Equatable {
+  const PokemonEntity({
     required this.id,
     required this.svgSprite,
     required this.name,
@@ -29,7 +29,7 @@ class PokemonEntity implements EquatableMixin {
         name = "Bulbasaur",
         type = "Poison",
         isFavourited = true,
-        attribute = PokemonAttributeEntity.dummy(),
+        attribute = const PokemonAttributeEntity.dummy(),
         stats = List.generate(
           5,
           (index) => PokemonStatEntity.dummy().copyWith(name: "Name $index"),
@@ -45,7 +45,6 @@ class PokemonEntity implements EquatableMixin {
         type,
         attribute,
         stats,
-        backgroundColor
       ];
 
   @override
@@ -72,10 +71,15 @@ class PokemonEntity implements EquatableMixin {
       backgroundColor: backgroundColor ?? this.backgroundColor,
     );
   }
+
+  @override
+  String toString() {
+    return 'PokemonEntity(id: $id, svgSprite: $svgSprite, name: $name, isFavourited: $isFavourited, type: $type, attribute: $attribute, stats: $stats, backgroundColor: $backgroundColor)';
+  }
 }
 
-class PokemonAttributeEntity implements EquatableMixin {
-  PokemonAttributeEntity({
+class PokemonAttributeEntity extends Equatable {
+  const PokemonAttributeEntity({
     required this.weight,
     required this.height,
     required this.bmi,
@@ -85,7 +89,7 @@ class PokemonAttributeEntity implements EquatableMixin {
   final num height;
   final num bmi;
 
-  PokemonAttributeEntity.dummy()
+  const PokemonAttributeEntity.dummy()
       : weight = 120,
         height = 40,
         bmi = 10;
@@ -109,13 +113,13 @@ class PokemonAttributeEntity implements EquatableMixin {
   }
 }
 
-class PokemonStatEntity implements EquatableMixin {
-  PokemonStatEntity({required this.name, required this.stat});
+class PokemonStatEntity extends Equatable {
+  const PokemonStatEntity({required this.name, required this.stat});
 
   final String name;
   final num stat;
 
-  PokemonStatEntity.dummy()
+  const PokemonStatEntity.dummy()
       : name = "hp",
         stat = 50;
 
