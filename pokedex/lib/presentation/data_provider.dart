@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'data_controller.dart';
 
-class DataControllerProvider<T extends BaseDataController>
+class DataControllerProvider<T extends BaseListDataController>
     extends InheritedWidget {
   const DataControllerProvider({
     super.key,
@@ -12,7 +12,7 @@ class DataControllerProvider<T extends BaseDataController>
 
   final T dataController;
 
-  static T of<T extends BaseDataController>(BuildContext context) {
+  static T of<T extends BaseListDataController>(BuildContext context) {
     final element = context
         .getElementForInheritedWidgetOfExactType<DataControllerProvider<T>>();
 

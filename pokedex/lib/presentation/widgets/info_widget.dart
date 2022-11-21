@@ -46,7 +46,7 @@ class InfoWidget extends StatelessWidget {
               ),
             ),
             sizedBox,
-            Text(text, style: textTheme.headlineSmall),
+            Text(text, style: textTheme.bodyLarge),
             sizedBox,
             if (buttonText != null)
               FloatingActionButton.extended(

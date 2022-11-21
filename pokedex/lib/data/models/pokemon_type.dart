@@ -49,10 +49,10 @@ class PokemonV2PokemonType extends Equatable {
 
   factory PokemonV2PokemonType.fromJsonRestfulAPI(Map<String, dynamic> json) {
     return PokemonV2PokemonType(
-      pokemonV2Type: json['types'] == null
+      pokemonV2Type: json['type'] == null
           ? null
           : PokemonV2Type.fromJsonRestfulAPI(
-              json['types'] as Map<String, dynamic>),
+              json['type'] as Map<String, dynamic>),
     );
   }
 

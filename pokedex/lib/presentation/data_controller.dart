@@ -48,7 +48,6 @@ class UIState<T> implements EquatableMixin {
 
 abstract class BaseDataController<T> extends ChangeNotifier {
   BaseDataController({required T data}) : _data = data;
-
   final T _data;
 
   late UIState<T> _state = UIState<T>(data: _data);
@@ -62,6 +61,10 @@ abstract class BaseDataController<T> extends ChangeNotifier {
   }
 
   UIState<T> get state => _state;
+}
+
+abstract class BaseListDataController<T> extends BaseDataController<List<T>> {
+  BaseListDataController({required List<T> data}) : super(data: data);
 
   int _nextPage = 1;
 
@@ -78,7 +81,7 @@ abstract class BaseDataController<T> extends ChangeNotifier {
   void fetch();
 }
 
-class PokemonDataController extends BaseDataController<PokemonList> {
+class PokemonDataController extends BaseListDataController<PokemonEntity> {
   PokemonDataController({required RepositoryBase repository})
       : _repository = repository,
         super(data: []);
@@ -112,13 +115,14 @@ class PokemonDataController extends BaseDataController<PokemonList> {
 
   @visibleForTesting
   int get pageOffset {
-    return ((nextPage-1) * _pageLimit);
+    return ((nextPage - 1) * _pageLimit);
   }
 
   int get _pageLimit => 20;
 }
 
-class FavoritePokenDataController extends BaseDataController<PokemonList> {
+class FavoritePokenDataController
+    extends BaseListDataController<PokemonEntity> {
   FavoritePokenDataController({required RepositoryBase repository})
       : _repository = repository,
         super(data: []);
@@ -127,13 +131,50 @@ class FavoritePokenDataController extends BaseDataController<PokemonList> {
 
   @override
   void fetch() async {
-    state = _state.loadingState(isLoading: true);
+    state = state.loadingState(isLoading: true);
 
     final result = await _repository.fetchFavouritePokemons();
 
     result.fold(
-      (left) => state = _state.errorState(left),
-      (right) => state = _state.successState(right, empty: right.isEmpty),
+      (left) => state = state.errorState(left),
+      (right) => state = state.successState(right, empty: right.isEmpty),
     );
   }
+
+  void updateList(List<PokemonEntity> newList) {
+    if (newList == state.data) return;
+
+    state = state.successState(newList);
+  }
+}
+
+class AddToFavouriteDataController extends BaseDataController<bool?> {
+  AddToFavouriteDataController({
+    required this.pokemonDataController,
+    required this.favoritePokenDataController,
+    required this.repository,
+  }) : super(data: null);
+
+  final FavoritePokenDataController favoritePokenDataController;
+  final PokemonDataController pokemonDataController;
+  final RepositoryBase repository;
+
+  void saveFavourite(PokemonEntity entity) async {
+    state = state.loadingState(isLoading: true);
+
+    final result = await repository.saveFavourite(entity);
+
+    result.fold(
+      (left) => state = state.errorState(left),
+      (right) {
+        state = state.successState(true);
+        favoritePokenDataController.updateList(right);
+      },
+    );
+  }
+
+  bool isFavourited(PokemonEntity entity) =>
+      favoritePokenDataController.state.data
+          .where((element) => element.id == entity.id)
+          .isNotEmpty;
 }
