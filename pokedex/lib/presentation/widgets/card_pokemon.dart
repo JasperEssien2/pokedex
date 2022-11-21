@@ -30,11 +30,10 @@ class PokedexCard extends StatelessWidget {
       delayMilliseconds: 30,
       performAnimation: animate,
       child: GestureDetector(
-        onTap: () => Navigator.push(
+        onTap: () => Navigator.pushNamed(
           context,
-          MaterialPageRoute(
-            builder: (context) => PokemonDetailScreen(pokemon: pokemon),
-          ),
+          PokemonDetailScreen.pageName,
+          arguments: pokemon,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,

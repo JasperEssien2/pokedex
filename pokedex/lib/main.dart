@@ -9,6 +9,8 @@ import 'package:pokedex/presentation/data_provider.dart';
 import 'package:pokedex/presentation/home_screen.dart';
 import 'package:pokedex/util.dart/colors.dart';
 
+import 'presentation/detail_screen.dart';
+
 void main() {
   final dataSource = RestfulApiDataSource();
   final repository = RepositoryImpl(dataSource: dataSource);
@@ -75,6 +77,9 @@ class _MyAppState extends State<MyApp> {
           }),
         ),
       ),
+      routes: {
+        PokemonDetailScreen.pageName: (context) => const PokemonDetailScreen(),
+      },
     );
   }
 

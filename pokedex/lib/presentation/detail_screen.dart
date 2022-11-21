@@ -4,13 +4,32 @@ import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
-class PokemonDetailScreen extends StatelessWidget {
+class PokemonDetailScreen extends StatefulWidget {
+  static String pageName = "PokemonDetailScreen";
+
   const PokemonDetailScreen({
     super.key,
-    required this.pokemon,
+    this.pokemon,
   });
 
-  final PokemonEntity pokemon;
+  final PokemonEntity? pokemon;
+
+  @override
+  State<PokemonDetailScreen> createState() => _PokemonDetailScreenState();
+}
+
+class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
+  late PokemonEntity pokemon;
+
+  @override
+  void didChangeDependencies() {
+    if (widget.pokemon != null) {
+      pokemon = widget.pokemon!;
+    } else {
+      pokemon = ModalRoute.of(context)!.settings.arguments as PokemonEntity;
+    }
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +86,8 @@ class PokemonDetailScreen extends StatelessWidget {
                     .toList(),
               ),
             ),
-          )
+          ),
+          const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
       floatingActionButton: FloatingActionButton.extended(
