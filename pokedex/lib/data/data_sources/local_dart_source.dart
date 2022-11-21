@@ -22,9 +22,13 @@ mixin LocalDataSource {
     try {
       final list = <CachePokemonModel>[];
 
-      store.toMap().forEach((key, value) {
-        list.add(CachePokemonModel.fromMap(value!));
-      });
+      final allData = store.toMap();
+
+      if (allData.isNotEmpty) {
+        allData.forEach((key, value) {
+          list.add(CachePokemonModel.fromMap(value!));
+        });
+      }
 
       return Right(list);
     } catch (e) {

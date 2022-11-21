@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/domain/repository_base.dart';
 
-class UIState<T> implements EquatableMixin {
-  UIState({
+class UIState<T> extends Equatable {
+  const UIState({
     required this.data,
     this.error,
     this.loading = true,
@@ -150,31 +150,29 @@ class FavoritePokenDataController
 
 class AddToFavouriteDataController extends BaseDataController<bool?> {
   AddToFavouriteDataController({
-    required this.pokemonDataController,
-    required this.favoritePokenDataController,
-    required this.repository,
-  }) : super(data: null);
+    required FavoritePokenDataController favoritePokenDataController,
+  })  : _favoritePokenDataController = favoritePokenDataController,
+        super(data: null);
 
-  final FavoritePokenDataController favoritePokenDataController;
-  final PokemonDataController pokemonDataController;
-  final RepositoryBase repository;
+  final FavoritePokenDataController _favoritePokenDataController;
 
   void saveFavourite(PokemonEntity entity) async {
     state = state.loadingState(isLoading: true);
-
-    final result = await repository.saveFavourite(entity);
+    // await Future.delayed(const Duration(milliseconds: 900));
+    final result =
+        await _favoritePokenDataController._repository.saveFavourite(entity);
 
     result.fold(
       (left) => state = state.errorState(left),
       (right) {
         state = state.successState(true);
-        favoritePokenDataController.updateList(right);
+        _favoritePokenDataController.updateList(right);
       },
     );
   }
 
   bool isFavourited(PokemonEntity entity) =>
-      favoritePokenDataController.state.data
+      _favoritePokenDataController.state.data
           .where((element) => element.id == entity.id)
           .isNotEmpty;
 }

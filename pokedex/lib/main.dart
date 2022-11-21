@@ -78,7 +78,17 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       routes: {
-        PokemonDetailScreen.pageName: (context) => const PokemonDetailScreen(),
+        PokemonDetailScreen.pageName: (context) {
+          return DataControllerProvider(
+            dataController: _favouriteController,
+            child: DataControllerProvider(
+              dataController: _pokemonController,
+              child: Builder(builder: (context) {
+                return const PokemonDetailScreen();
+              }),
+            ),
+          );
+        },
       },
     );
   }

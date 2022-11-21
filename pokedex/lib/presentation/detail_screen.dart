@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
+import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
@@ -19,6 +20,9 @@ class PokemonDetailScreen extends StatefulWidget {
 }
 
 class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
+  late final _dataController = AddToFavouriteDataController(
+    favoritePokenDataController: context.favouritePokemonController,
+  );
   late PokemonEntity pokemon;
 
   @override
@@ -90,20 +94,105 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-        label: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            "Mark as favourite",
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
+      floatingActionButton: Builder(builder: (context) {
+        final markAsFavouriteFAB = _FloatingActionButtonNormal(
+          dataController: _dataController,
+          entity: pokemon,
+          text: "Mark as favourite",
+        );
+        final removeAsFavouriteFAB = _FloatingActionButtonNormal(
+          dataController: _dataController,
+          entity: pokemon,
+          text: "Remove from favourites",
+          color: appLightColor,
+          textColor: appColor,
+        );
+
+        return AnimatedBuilder(
+          animation: _dataController,
+          builder: (context, child) {
+            final state = _dataController.state;
+
+            print("ADD FAVOURITE ================== $state");
+
+            Widget firstWidget = const SizedBox.shrink();
+            // Widget lastWidget = const SizedBox.shrink();
+
+            if (state.loading) {
+              firstWidget = const _FloatingActionButtonLoading();
+            }
+
+            if (_dataController.isFavourited(pokemon)) {
+              firstWidget = removeAsFavouriteFAB;
+            } else {
+              firstWidget = markAsFavouriteFAB;
+            }
+
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              transitionBuilder: (Widget child, Animation<double> animation) {
+                return ScaleTransition(scale: animation, child: child);
+              },
+              child: firstWidget,
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  @override
+  void dispose() {
+    _dataController.dispose();
+    super.dispose();
+  }
+}
+
+class _FloatingActionButtonNormal extends StatelessWidget {
+  const _FloatingActionButtonNormal({
+    Key? key,
+    required this.dataController,
+    required this.entity,
+    required this.text,
+    this.color,
+    this.textColor,
+  }) : super(key: key);
+
+  final AddToFavouriteDataController dataController;
+  final PokemonEntity entity;
+  final String text;
+  final Color? color;
+  final Color? textColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton.extended(
+      key: ValueKey(text),
+      backgroundColor: color,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
+      label: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: textColor ?? Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
         ),
-        onPressed: () {},
       ),
+      onPressed: () => dataController.saveFavourite(entity),
+    );
+  }
+}
+
+class _FloatingActionButtonLoading extends StatelessWidget {
+  const _FloatingActionButtonLoading();
+
+  @override
+  Widget build(BuildContext context) {
+    return const FloatingActionButton(
+      onPressed: null,
+      child: CircularProgressIndicator(strokeWidth: 10, color: Colors.white),
     );
   }
 }
