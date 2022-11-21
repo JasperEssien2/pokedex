@@ -100,6 +100,7 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           entity: pokemon,
           text: "Mark as favourite",
         );
+
         final removeAsFavouriteFAB = _FloatingActionButtonNormal(
           dataController: _dataController,
           entity: pokemon,
@@ -115,25 +116,25 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
 
             print("ADD FAVOURITE ================== $state");
 
-            Widget firstWidget = const SizedBox.shrink();
+            Widget widget = const SizedBox.shrink();
             // Widget lastWidget = const SizedBox.shrink();
 
             if (state.loading) {
-              firstWidget = const _FloatingActionButtonLoading();
+              widget = const _FloatingActionButtonLoading();
             }
 
             if (_dataController.isFavourited(pokemon)) {
-              firstWidget = removeAsFavouriteFAB;
+              widget = removeAsFavouriteFAB;
             } else {
-              firstWidget = markAsFavouriteFAB;
+              widget = markAsFavouriteFAB;
             }
 
             return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 400),
+              duration: const Duration(milliseconds: 1400),
               transitionBuilder: (Widget child, Animation<double> animation) {
                 return ScaleTransition(scale: animation, child: child);
               },
-              child: firstWidget,
+              child: widget,
             );
           },
         );

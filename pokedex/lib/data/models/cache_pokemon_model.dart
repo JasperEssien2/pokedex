@@ -124,7 +124,7 @@ class Stat extends Equatable {
   factory Stat.fromMap(Map<String, dynamic> map) {
     return Stat(
       name: map['name'] ?? '',
-      stat: map['stat'] ?? 0,
+      stat: map['stat'],
     );
   }
 
