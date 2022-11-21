@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:pokedex/data/data_sources/graphql_data_source.dart';
+import 'package:pokedex/data/data_sources/data_sources_export.dart';
+import 'package:pokedex/data/data_sources/restful_api_data_source.dart';
 import 'package:pokedex/data/repository_impl.dart';
 import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/presentation/data_controller.dart';
@@ -9,7 +10,7 @@ import 'package:pokedex/presentation/home_screen.dart';
 import 'package:pokedex/util.dart/colors.dart';
 
 void main() {
-  final dataSource = GraphQlDataSource();
+  final dataSource = RestfulApiDataSource();
   final repository = RepositoryImpl(dataSource: dataSource);
 
   runApp(MyApp(repository: repository));

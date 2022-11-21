@@ -2,7 +2,7 @@ import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:pokedex/data/data_sources/graphql_data_source.dart';
+import 'package:pokedex/data/data_sources/data_source.dart';
 import 'package:pokedex/data/models/cache_pokemon_model.dart';
 import 'package:pokedex/data/models/pokemon_model.dart';
 import 'package:pokedex/data/repository_impl.dart';
@@ -11,7 +11,7 @@ import 'package:pokedex/util.dart/util_export.dart';
 
 import 'raw_map_json.dart';
 
-class MockedGraphQlDataSource extends Mock implements GraphQlDataSource {}
+class MockedGraphQlDataSource extends Mock implements BaseDataSource {}
 
 class FakeCachePokemonModel extends Fake implements CachePokemonModel {}
 
