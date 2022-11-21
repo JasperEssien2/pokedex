@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/util.dart/colors.dart';
@@ -45,7 +47,7 @@ class ItemStats extends StatelessWidget {
             IgnorePointer(
               ignoring: true,
               child: Slider(
-                max: 100,
+                max: max(100, stat.stat.toDouble()),
                 min: 0,
                 activeColor: getColor,
                 inactiveColor: lightShadeGreyColor,

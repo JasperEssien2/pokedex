@@ -112,7 +112,7 @@ class PokemonDataController extends BaseDataController<PokemonList> {
 
   @visibleForTesting
   int get pageOffset {
-    return (nextPage + _pageLimit) - 1;
+    return ((nextPage-1) * _pageLimit);
   }
 
   int get _pageLimit => 20;
