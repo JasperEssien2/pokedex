@@ -6,12 +6,13 @@ class FakeRepository implements RepositoryBase {
   bool returnSuccess = true;
   PokemonList? returnList;
   PokemonList? nextList;
+  bool isNextBatch = false;
 
   @override
   Future<Either<String, PokemonList>> fetchPokemons(
       {required int offset, int limit = 20}) async {
     if (returnSuccess) {
-      return Right(offset > 1
+      return Right(isNextBatch
           ? nextList ?? []
           : returnList ??
               List.generate(

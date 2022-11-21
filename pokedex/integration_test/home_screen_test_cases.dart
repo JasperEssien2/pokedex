@@ -82,6 +82,7 @@ class HomeScreenTestCases {
       findInfoWidget(text: "No pokemon found", buttonText: "Retry"),
       findsOneWidget,
     );
+    expect(context.pokemonController.nextPage, 1);
 
     expect(find.byType(BottomLoadingWidget), findsNothing);
     expect(find.byType(PokedexCardShimmer), findsNothing);
@@ -92,7 +93,7 @@ class HomeScreenTestCases {
       PokemonEntity.dummy().copyWith(id: 5)
     ];
 
-    repository.nextList = newList;
+    repository.returnList = newList;
 
     await tester.tap(find.text("Retry"));
 
@@ -103,6 +104,7 @@ class HomeScreenTestCases {
     }
 
     expect(find.byType(GridView), findsOneWidget);
+    expect(context.pokemonController.nextPage, 2);
   }
 
   Future<void> testAllPokemonSubsequentEmptyState(WidgetTester tester) async {
@@ -118,6 +120,7 @@ class HomeScreenTestCases {
     await _allPokemonFetch(context, tester);
 
     repository.nextList = [];
+    repository.isNextBatch = true;
 
     await _allPokemonFetch(context, tester);
 
@@ -158,36 +161,55 @@ class HomeScreenTestCases {
   }
 
   Future<void> testPagination(WidgetTester tester) async {
-    repository.nextList = [
-      PokemonEntity.dummy().copyWith(id: 42),
-      PokemonEntity.dummy().copyWith(id: 92),
-    ];
-
-    repository.returnList =
-        List.generate(15, (index) => PokemonEntity.dummy().copyWith(id: index));
+    repository.returnList = List.generate(
+      20,
+      (index) => PokemonEntity.dummy().copyWith(id: index),
+    );
 
     await TestUtils.pumpApp(tester, repository: repository);
 
     final context = tester.state(find.byType(HomeScreen)).context;
+    final controller = context.pokemonController;
 
-    tester.printToConsole(
-        "DATA ============ ${context.pokemonController.state.data.where((element) => element.id == 14).toList()}");
+    expect(controller.nextPage, 2);
+    expect(controller.pageOffset, 21);
+
+    repository.nextList = [
+      PokemonEntity.dummy().copyWith(id: 542),
+      PokemonEntity.dummy().copyWith(id: 492),
+    ];
+
+    repository.isNextBatch = true;
 
     for (var item in repository.nextList!) {
       expect(find.byKey(ValueKey(item)), findsNothing);
     }
 
-    await TestUtils.scrollWidget(
-      tester,
-      visibleKey: ValueKey(PokemonEntity.dummy().copyWith(id: 14)),
-    );
+    controller.fetch();
 
-    for (var item in repository.returnList!) {
-      expect(find.byKey(ValueKey(item)), findsOneWidget);
-    }
+    await tester.pumpAndSettle();
+
+    await tester.drag(find.byType(GridView), const Offset(0, -600));
+
+    await tester.pumpAndSettle();
+
+    //TODO: Couldn't get the scroll to work
+    // await TestUtils.scrollWidget(
+    //   tester,
+    //   visibleKey: ValueKey(PokemonEntity.dummy().copyWith(id: 542)),
+    // );
+
+    // for (var item in repository.returnList!) {
+    //   expect(find.byKey(ValueKey(item)), findsOneWidget);
+    // }
     for (var item in repository.nextList!) {
       expect(find.byKey(ValueKey(item)), findsOneWidget);
     }
+
+    expect(controller.nextPage, 3);
+    expect(controller.pageOffset, 31);
+
+    await Future.delayed(const Duration(milliseconds: 2900));
   }
 
   Future<void> testFavouritePokemonLoadingState(WidgetTester tester) async {

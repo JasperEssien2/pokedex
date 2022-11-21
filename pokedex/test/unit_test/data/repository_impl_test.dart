@@ -37,7 +37,7 @@ void main() {
         offset: any(named: 'offset'), limit: any(named: 'limit'))).thenAnswer(
       (_) => Future.value(
         Right(
-          PokemonModel.fromMap(pokemonResponseDataRaw["data"]),
+          PokemonModel.fromMap(pokemonResponseDataRaw),
         ),
       ),
     ),

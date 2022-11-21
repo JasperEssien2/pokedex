@@ -89,15 +89,18 @@ class PokemonDataController extends BaseDataController<PokemonList> {
   void fetch() async {
     state = _state.loadingState(isLoading: true);
 
-    final result = await _repository.fetchPokemons(offset: _nextPage);
+    final result =
+        await _repository.fetchPokemons(offset: pageOffset, limit: _pageLimit);
 
     result.fold(
       (left) => state = _state.errorState(left),
       (right) {
-        _nextPage++;
-
         final newList = List<PokemonEntity>.from(state.data).toList()
           ..addAll(right);
+
+        if (right.isNotEmpty) {
+          nextPage++;
+        }
 
         state = _state.successState(
           newList,
@@ -106,6 +109,13 @@ class PokemonDataController extends BaseDataController<PokemonList> {
       },
     );
   }
+
+  @visibleForTesting
+  int get pageOffset {
+    return (nextPage + _pageLimit) - 1;
+  }
+
+  int get _pageLimit => 20;
 }
 
 class FavoritePokenDataController extends BaseDataController<PokemonList> {

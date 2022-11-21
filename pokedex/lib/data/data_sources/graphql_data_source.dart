@@ -1,10 +1,15 @@
 import 'package:either_dart/either.dart';
 import 'package:flutter/material.dart';
 import 'package:graphql/client.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:pokedex/data/data_sources/local_dart_source.dart';
 import 'package:pokedex/data/models/cache_pokemon_model.dart';
 import 'package:pokedex/data/models/pokemon_model.dart';
 
-class GraphQlDataSource with GraphQLQueriesText {
+import 'data_source.dart';
+
+class GraphQlDataSource extends BaseDataSource
+    with GraphQLQueriesText, LocalDataSource {
   final _httpLink = HttpLink('https://beta.pokeapi.co/graphql/v1beta');
 
   GraphQLClient? _client;
@@ -18,7 +23,9 @@ class GraphQlDataSource with GraphQLQueriesText {
   Future<GraphQLClient> getClient(
       {@visibleForTesting HiveStore? hiveStore}) async {
     if (_client == null) {
-      final store = hiveStore ?? await HiveStore.open();
+      final store = hiveStore ??
+          await HiveStore.open(
+              path: (await getApplicationDocumentsDirectory()).path);
 
       _client = GraphQLClient(
         link: _httpLink,
@@ -28,6 +35,7 @@ class GraphQlDataSource with GraphQLQueriesText {
     return _client!;
   }
 
+  @override
   Future<Either<String, PokemonModel>> queryPokemonData({
     required int offset,
     int limit = 20,
@@ -41,7 +49,7 @@ class GraphQlDataSource with GraphQLQueriesText {
         'offset': offset,
       },
       parserFn: (data) {
-        return PokemonModel.fromMap(data["data"]);
+        return PokemonModel.fromMap(data);
       },
     );
 
@@ -52,7 +60,7 @@ class GraphQlDataSource with GraphQLQueriesText {
       return Left(errorBuilder);
     }
 
-    return Right(result.parserFn(result.data!['data']!));
+    return Right(result.parserFn(result.data!));
   }
 
   String _buildErrorFromGraphQLErrors(QueryResult<PokemonModel> result) {
@@ -70,40 +78,20 @@ class GraphQlDataSource with GraphQLQueriesText {
     return errorBuilder;
   }
 
+  @override
   Future<Either<String, List<CachePokemonModel>>> mutateFavouritePokemon(
       CachePokemonModel model) async {
     final client = await getClient();
 
-    final store = client.cache.store;
-
-    final id = model.id.toString();
-
-    final pokemon = store.get(id);
-
-    if (pokemon == null) {
-      store.put(id, model.toMap());
-    } else {
-      store.delete(id);
-    }
-
-    return queryFavouritePokemon();
+    return saveFavourite(client.cache.store, model);
   }
 
+  @override
   Future<Either<String, List<CachePokemonModel>>>
       queryFavouritePokemon() async {
-    try {
-      final client = await getClient();
+    final client = await getClient();
 
-      final list = <CachePokemonModel>[];
-
-      client.cache.store.toMap().forEach((key, value) {
-        list.add(CachePokemonModel.fromMap(value!));
-      });
-
-      return Right(list);
-    } catch (e) {
-      return const Left("An error occurred fetching favourite pokemons");
-    }
+    return fetchFavourites(client.cache.store);
   }
 }
 

@@ -51,7 +51,7 @@ class TestUtils {
 
     await tester.pumpAndSettle();
 
-    await Future.delayed(Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2));
   }
 }
 

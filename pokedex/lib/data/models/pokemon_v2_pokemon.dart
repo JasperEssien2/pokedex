@@ -40,6 +40,22 @@ class PokemonV2Pokemon extends Equatable {
     );
   }
 
+  factory PokemonV2Pokemon.fromMapRestAPI(Map<String, dynamic> data) {
+    return PokemonV2Pokemon(
+      id: data['id'] as int?,
+      name: data['name'] as String?,
+      stats: (data['stats'] as List<dynamic>?)
+          ?.map((e) => PokemonV2PokemonStat.fromMap(e as Map<String, dynamic>))
+          .toList(),
+      types: (data['types'] as List<dynamic>?)
+          ?.map((e) => PokemonV2PokemonType.fromJson(e as Map<String, dynamic>))
+          .toList(),
+      spriteSvg: data['other']['dream_world']['front_default'],
+      height: data['height'] as int?,
+      weight: data['weight'] as int?,
+    );
+  }
+
   static _parseSpriteImage(Map<String, dynamic> data) {
     final spriteString =
         ((data['pokemon_v2_pokemonsprites'] as List).first as Map)['sprites'];

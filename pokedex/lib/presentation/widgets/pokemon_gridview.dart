@@ -119,6 +119,7 @@ class _PokemonGridViewState<T extends BaseDataController<PokemonList>>
     }
     if (widget.paginated) {
       if (_fetchMore(notification)) {
+        print("SCROLL AT END ============");
         context.dataController<T>().fetch();
         return true;
       }

@@ -1,12 +1,12 @@
 import 'package:either_dart/either.dart';
-import 'package:pokedex/data/data_sources/graphql_data_source.dart';
+import 'package:pokedex/data/data_sources/data_source.dart';
 import 'package:pokedex/domain/domain_export.dart';
 
 class RepositoryImpl extends RepositoryBase {
-  RepositoryImpl({required GraphQlDataSource dataSource})
+  RepositoryImpl({required BaseDataSource dataSource})
       : _dataSource = dataSource;
 
-  final GraphQlDataSource _dataSource;
+  final BaseDataSource _dataSource;
 
   @override
   Future<Either<String, PokemonList>> fetchPokemons(
