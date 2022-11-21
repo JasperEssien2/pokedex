@@ -18,6 +18,15 @@ class PokemonV2PokemonStat extends Equatable {
     );
   }
 
+  factory PokemonV2PokemonStat.fromMapRestAPI(Map<String, dynamic> data) {
+    return PokemonV2PokemonStat(
+      baseStat: data['base_stat'] as int?,
+      pokemonV2Stat: data['stat'] == null
+          ? null
+          : PokemonV2Stat.fromMap(data['stat'] as Map<String, dynamic>),
+    );
+  }
+
   PokemonV2PokemonStat copyWith({
     num? baseStat,
     PokemonV2Stat? pokemonV2Stat,

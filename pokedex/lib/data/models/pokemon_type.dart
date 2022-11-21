@@ -9,6 +9,11 @@ class PokemonV2Type extends Equatable {
         name: json['name'] as String?,
       );
 
+  factory PokemonV2Type.fromJsonRestfulAPI(Map<String, dynamic> json) =>
+      PokemonV2Type(
+        name: json['type']['name'] as String?,
+      );
+
   Map<String, dynamic> toJson() => {
         'name': name,
       };
@@ -39,6 +44,15 @@ class PokemonV2PokemonType extends Equatable {
           ? null
           : PokemonV2Type.fromJson(
               json['pokemon_v2_type'] as Map<String, dynamic>),
+    );
+  }
+
+  factory PokemonV2PokemonType.fromJsonRestfulAPI(Map<String, dynamic> json) {
+    return PokemonV2PokemonType(
+      pokemonV2Type: json['types'] == null
+          ? null
+          : PokemonV2Type.fromJsonRestfulAPI(
+              json['types'] as Map<String, dynamic>),
     );
   }
 
