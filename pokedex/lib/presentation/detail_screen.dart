@@ -95,7 +95,11 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
         ],
       ),
       floatingActionButton: Builder(builder: (context) {
-        final markAsFavouriteFAB = _FloatingActionButtonNormal(
+       
+        return AnimatedBuilder(
+          animation: _dataController,
+          builder: (context, child) {
+             final markAsFavouriteFAB = _FloatingActionButtonNormal(
           dataController: _dataController,
           entity: pokemon,
           text: "Mark as favourite",
@@ -109,9 +113,6 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           textColor: appColor,
         );
 
-        return AnimatedBuilder(
-          animation: _dataController,
-          builder: (context, child) {
             final state = _dataController.state;
 
             print("ADD FAVOURITE ================== $state");
@@ -119,9 +120,9 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
             Widget widget = const SizedBox.shrink();
             // Widget lastWidget = const SizedBox.shrink();
 
-            if (state.loading) {
-              widget = const _FloatingActionButtonLoading();
-            }
+            // if (state.loading) {
+            //   widget = const _FloatingActionButtonLoading();
+            // }
 
             if (_dataController.isFavourited(pokemon)) {
               widget = removeAsFavouriteFAB;

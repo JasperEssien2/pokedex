@@ -20,14 +20,11 @@ mixin LocalDataSource {
 
   Either<String, List<CachePokemonModel>> fetchFavourites(Store store) {
     try {
+      store = store as HiveStore;
       final list = <CachePokemonModel>[];
 
-      final allData = store.toMap();
-
-      if (allData.isNotEmpty) {
-        allData.forEach((key, value) {
-          list.add(CachePokemonModel.fromMap(value!));
-        });
+      for (var element in store.box.values.toList()) {
+        list.add(CachePokemonModel.fromMap(element as Map<String, dynamic>));
       }
 
       return Right(list);
