@@ -94,52 +94,32 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
-      floatingActionButton: Builder(builder: (context) {
-       
-        return AnimatedBuilder(
-          animation: _dataController,
-          builder: (context, child) {
-             final markAsFavouriteFAB = _FloatingActionButtonNormal(
-          dataController: _dataController,
-          entity: pokemon,
-          text: "Mark as favourite",
-        );
+      floatingActionButton: AnimatedBuilder(
+        animation: _dataController,
+        builder: (context, _) {
+          _FloatingActionButtonNormal markAsFavouriteFAB =
+              _FloatingActionButtonNormal(
+            dataController: _dataController,
+            entity: pokemon,
+            text: "Mark as favourite",
+            key: const ValueKey(1),
+          );
 
-        final removeAsFavouriteFAB = _FloatingActionButtonNormal(
-          dataController: _dataController,
-          entity: pokemon,
-          text: "Remove from favourites",
-          color: appLightColor,
-          textColor: appColor,
-        );
+          _FloatingActionButtonNormal removeAsFavouriteFAB =
+              _FloatingActionButtonNormal(
+            dataController: _dataController,
+            entity: pokemon,
+            key: const ValueKey(2),
+            text: "Remove from favourites",
+            color: appLightColor,
+            textColor: appColor,
+          );
 
-            final state = _dataController.state;
-
-            print("ADD FAVOURITE ================== $state");
-
-            Widget widget = const SizedBox.shrink();
-            // Widget lastWidget = const SizedBox.shrink();
-
-            // if (state.loading) {
-            //   widget = const _FloatingActionButtonLoading();
-            // }
-
-            if (_dataController.isFavourited(pokemon)) {
-              widget = removeAsFavouriteFAB;
-            } else {
-              widget = markAsFavouriteFAB;
-            }
-
-            return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 1400),
-              transitionBuilder: (Widget child, Animation<double> animation) {
-                return ScaleTransition(scale: animation, child: child);
-              },
-              child: widget,
-            );
-          },
-        );
-      }),
+          return _dataController.isFavourited(pokemon)
+              ? removeAsFavouriteFAB
+              : markAsFavouriteFAB;
+        },
+      ),
     );
   }
 
@@ -169,7 +149,6 @@ class _FloatingActionButtonNormal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-      key: ValueKey(text),
       backgroundColor: color,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
       label: Padding(
@@ -183,18 +162,6 @@ class _FloatingActionButtonNormal extends StatelessWidget {
         ),
       ),
       onPressed: () => dataController.saveFavourite(entity),
-    );
-  }
-}
-
-class _FloatingActionButtonLoading extends StatelessWidget {
-  const _FloatingActionButtonLoading();
-
-  @override
-  Widget build(BuildContext context) {
-    return const FloatingActionButton(
-      onPressed: null,
-      child: CircularProgressIndicator(strokeWidth: 10, color: Colors.white),
     );
   }
 }
