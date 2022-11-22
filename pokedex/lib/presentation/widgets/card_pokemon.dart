@@ -11,11 +11,10 @@ import 'animatable_parent.dart';
 
 class PokedexCard extends StatelessWidget {
   const PokedexCard({
-    super.key,
     required this.pokemon,
     required this.index,
     this.animate = false,
-  });
+  }) : super(key: null);
 
   final PokemonEntity pokemon;
   final int index;
@@ -30,11 +29,14 @@ class PokedexCard extends StatelessWidget {
       delayMilliseconds: 30,
       performAnimation: animate,
       child: GestureDetector(
-        onTap: () => Navigator.pushNamed(
-          context,
-          PokemonDetailScreen.pageName,
-          arguments: pokemon,
-        ),
+        key: ValueKey(pokemon),
+        onTap: () {
+          Navigator.pushNamed(
+            context,
+            PokemonDetailScreen.pageName,
+            arguments: pokemon,
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [

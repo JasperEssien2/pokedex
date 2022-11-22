@@ -95,7 +95,6 @@ class _PokemonGridViewState<T extends BaseListDataController<PokemonEntity>>
                   itemBuilder: (context, index) => isLoading
                       ? PokedexCardShimmer(index: index, animate: !isLoading)
                       : PokedexCard(
-                          key: ValueKey(state.data[index]),
                           index: index % 20,
                           pokemon: state.data[index],
                           animate: _animateCardNotifier.value,
@@ -146,9 +145,11 @@ class BottomLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
-      child: LinearProgressIndicator(minHeight: 6),
+    return const RepaintBoundary(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
+        child: LinearProgressIndicator(minHeight: 6),
+      ),
     );
   }
 }

@@ -97,26 +97,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
       floatingActionButton: AnimatedBuilder(
         animation: _dataController,
         builder: (context, _) {
-          AppFloatingActionButton markAsFavouriteFAB = AppFloatingActionButton(
+          return AppFloatingActionButton(
             dataController: _dataController,
             entity: pokemon,
-            text: "Mark as favourite",
-            key: const ValueKey(1),
           );
-
-          AppFloatingActionButton removeAsFavouriteFAB =
-              AppFloatingActionButton(
-            dataController: _dataController,
-            entity: pokemon,
-            key: const ValueKey(2),
-            text: "Remove from favourites",
-            color: appLightColor,
-            textColor: appColor,
-          );
-
-          return _dataController.isFavourited(pokemon)
-              ? removeAsFavouriteFAB
-              : markAsFavouriteFAB;
         },
       ),
     );
@@ -134,28 +118,25 @@ class AppFloatingActionButton extends StatelessWidget {
     Key? key,
     required this.dataController,
     required this.entity,
-    required this.text,
-    this.color,
-    this.textColor,
   }) : super(key: key);
 
   final AddToFavouriteDataController dataController;
   final PokemonEntity entity;
-  final String text;
-  final Color? color;
-  final Color? textColor;
 
   @override
   Widget build(BuildContext context) {
+    final isFavourite = dataController.isFavourited(entity);
+
     return FloatingActionButton.extended(
-      backgroundColor: color,
+      key: const ValueKey("favourite-fab"),
+      backgroundColor: isFavourite ? appLightColor : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
       label: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         child: Text(
-          text,
+          isFavourite ? "Remove from favourite" : "Mark as favourite",
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: textColor ?? Colors.white,
+                color: isFavourite ? appColor : Colors.white,
                 fontWeight: FontWeight.w700,
               ),
         ),

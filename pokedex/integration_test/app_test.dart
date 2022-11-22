@@ -1,16 +1,19 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pokedex/data/fake_repository.dart';
 
+import 'detail_screen_test_cases.dart';
 import 'home_screen_test_cases.dart';
 
 void main() {
   late FakeRepository repository;
   late HomeScreenTestCases homeScreenTestCases;
+  late DetailScreenTestCases detailScreenTestCases;
 
   setUp(
     () {
       repository = FakeRepository();
       homeScreenTestCases = HomeScreenTestCases(repository);
+      detailScreenTestCases = DetailScreenTestCases(repository);
     },
   );
 
@@ -113,6 +116,46 @@ void main() {
               await homeScreenTestCases.testFavouritePokemonErrorState(tester);
             },
           );
+        },
+      );
+    },
+  );
+
+  group(
+    "Test DetailScreen",
+    () {
+      testWidgets(
+        "Ensure image and pokemon id, name, type, image displays correctly",
+        (tester) async {
+          await detailScreenTestCases.testAppBar(tester);
+        },
+      );
+
+      testWidgets(
+        "Ensure pokemon attributes displays correctly",
+        (tester) async {
+          await detailScreenTestCases.testPokemonAttributes(tester);
+        },
+      );
+
+      testWidgets(
+        "Ensure pokemon stats range, colors, and text are correct",
+        (tester) async {
+          await detailScreenTestCases.testPokemonStats(tester);
+        },
+      );
+
+      testWidgets(
+        "Ensure FloatingActionButton behaves as expected when adding to favourite",
+        (tester) async {
+          await detailScreenTestCases.testAddToFavourite(tester);
+        },
+      );
+
+      testWidgets(
+        "Ensure FloatingActionButton behaves as expected when removing from favourite",
+        (tester) async {
+          await detailScreenTestCases.testRemoveFromFavourite(tester);
         },
       );
     },

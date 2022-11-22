@@ -32,7 +32,8 @@ class PokemonEntity extends Equatable {
         attribute = const PokemonAttributeEntity.dummy(),
         stats = List.generate(
           5,
-          (index) => PokemonStatEntity.dummy().copyWith(name: "Name $index"),
+          (index) =>
+              const PokemonStatEntity.dummy().copyWith(name: "Name $index"),
         ),
         backgroundColor = Colors.blue.withOpacity(.1);
 

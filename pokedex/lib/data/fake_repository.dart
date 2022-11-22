@@ -5,6 +5,8 @@ import 'package:pokedex/domain/repository_base.dart';
 class FakeRepository implements RepositoryBase {
   bool returnSuccess = true;
   PokemonList? returnList;
+  PokemonList? favouritesReturnList;
+
   PokemonList? nextList;
   bool isNextBatch = false;
 
@@ -33,7 +35,7 @@ class FakeRepository implements RepositoryBase {
   Future<Either<String, PokemonList>> fetchFavouritePokemons() async {
     if (returnSuccess) {
       return Right(
-        returnList ??
+        (favouritesReturnList ?? returnList) ??
             List.generate(
               20,
               (index) =>

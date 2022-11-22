@@ -34,6 +34,8 @@ class TestUtils {
   }) async {
     await pumpApp(tester, repository: repository, observer: observer);
 
+    await tester.pumpAndSettle();
+
     await tester.tap(find.byKey(key));
 
     await tester.pumpAndSettle();
