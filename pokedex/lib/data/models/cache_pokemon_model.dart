@@ -63,7 +63,7 @@ class CachePokemonModel extends Equatable {
     };
   }
 
-  factory CachePokemonModel.fromMap(Map<String, dynamic> map) {
+  factory CachePokemonModel.fromMap(Map<dynamic, dynamic> map) {
     return CachePokemonModel(
       stats: List<Stat>.from(map['stats']?.map((x) => Stat.fromMap(x))),
       id: map['id']?.toInt() ?? 0,

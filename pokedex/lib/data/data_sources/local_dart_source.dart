@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:either_dart/either.dart';
 import 'package:graphql/client.dart';
 import 'package:pokedex/data/models/cache_pokemon_model.dart';
@@ -23,8 +25,11 @@ mixin LocalDataSource {
       store = store as HiveStore;
       final list = <CachePokemonModel>[];
 
-      for (var element in store.box.values.toList()) {
-        list.add(CachePokemonModel.fromMap(element as Map<String, dynamic>));
+      for (var element in store.box.keys) {
+        final map = store.box.get(element)!;
+        final decodedMap = jsonDecode(jsonEncode(map));
+
+        list.add(CachePokemonModel.fromMap(decodedMap));
       }
 
       return Right(list);
