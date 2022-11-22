@@ -6,6 +6,7 @@ I decided to use the clean-architecture structure, for architecting the app. I b
 
 For a small-scale project like this,  I concluded that using state-management libraries might be overkill, and went with using what Flutter has provided: `ChangeNotifiers` and `InheritedWidget`.
 
+![Demo](display/app_demo.gif)
 ### Structure 
 The sample structure of this project is displayed below:
 
