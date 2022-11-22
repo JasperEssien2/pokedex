@@ -47,10 +47,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
             expandedHeight: 300,
             backgroundColor: pokemon.backgroundColor,
             pinned: false,
-            flexibleSpace: _AppBar(pokemon: pokemon, textTheme: textTheme),
+            flexibleSpace: DetailAppBar(pokemon: pokemon, textTheme: textTheme),
           ),
           SliverToBoxAdapter(
-            child: _PokemonAtrribute(attribute: pokemon.attribute),
+            child: PokemonAtrribute(attribute: pokemon.attribute),
           ),
           SliverToBoxAdapter(
             child: Container(
@@ -97,16 +97,15 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
       floatingActionButton: AnimatedBuilder(
         animation: _dataController,
         builder: (context, _) {
-          _FloatingActionButtonNormal markAsFavouriteFAB =
-              _FloatingActionButtonNormal(
+          AppFloatingActionButton markAsFavouriteFAB = AppFloatingActionButton(
             dataController: _dataController,
             entity: pokemon,
             text: "Mark as favourite",
             key: const ValueKey(1),
           );
 
-          _FloatingActionButtonNormal removeAsFavouriteFAB =
-              _FloatingActionButtonNormal(
+          AppFloatingActionButton removeAsFavouriteFAB =
+              AppFloatingActionButton(
             dataController: _dataController,
             entity: pokemon,
             key: const ValueKey(2),
@@ -130,8 +129,8 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
   }
 }
 
-class _FloatingActionButtonNormal extends StatelessWidget {
-  const _FloatingActionButtonNormal({
+class AppFloatingActionButton extends StatelessWidget {
+  const AppFloatingActionButton({
     Key? key,
     required this.dataController,
     required this.entity,
@@ -166,8 +165,8 @@ class _FloatingActionButtonNormal extends StatelessWidget {
   }
 }
 
-class _AppBar extends StatelessWidget {
-  const _AppBar({
+class DetailAppBar extends StatelessWidget {
+  const DetailAppBar({
     Key? key,
     required this.pokemon,
     required this.textTheme,
@@ -233,8 +232,8 @@ class _AppBar extends StatelessWidget {
   }
 }
 
-class _PokemonAtrribute extends StatelessWidget {
-  const _PokemonAtrribute({required this.attribute});
+class PokemonAtrribute extends StatelessWidget {
+  const PokemonAtrribute({super.key, required this.attribute});
 
   final PokemonAttributeEntity attribute;
   @override
