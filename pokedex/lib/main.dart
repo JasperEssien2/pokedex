@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pokedex/data/data_sources/data_sources_export.dart';
-import 'package:pokedex/data/data_sources/restful_api_data_source.dart';
 import 'package:pokedex/data/repository_impl.dart';
 import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/presentation/data_controller.dart';
@@ -12,6 +11,7 @@ import 'package:pokedex/util.dart/colors.dart';
 import 'presentation/detail_screen.dart';
 
 void main() {
+  ///To use an implementation of Graphql, change instace to [GraphQlDataSource]  final dataSource = GraphQlDataSource()
   final dataSource = RestfulApiDataSource();
   final repository = RepositoryImpl(dataSource: dataSource);
 
@@ -78,7 +78,17 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
       routes: {
-        PokemonDetailScreen.pageName: (context) => const PokemonDetailScreen(),
+        PokemonDetailScreen.pageName: (context) {
+          return DataControllerProvider(
+            dataController: _favouriteController,
+            child: DataControllerProvider(
+              dataController: _pokemonController,
+              child: Builder(builder: (context) {
+                return const PokemonDetailScreen();
+              }),
+            ),
+          );
+        },
       },
     );
   }

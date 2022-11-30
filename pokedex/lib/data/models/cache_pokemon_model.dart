@@ -63,17 +63,17 @@ class CachePokemonModel extends Equatable {
     };
   }
 
-  factory CachePokemonModel.fromMap(Map<String, dynamic> map) {
+  factory CachePokemonModel.fromMap(Map<dynamic, dynamic> map) {
     return CachePokemonModel(
       stats: List<Stat>.from(map['stats']?.map((x) => Stat.fromMap(x))),
       id: map['id']?.toInt() ?? 0,
       name: map['name'] ?? '',
-      height: map['height'] ?? 0,
-      weight: map['weight'] ?? 0,
+      height: map['height'],
+      weight: map['weight'],
       sprite: map['sprite'] ?? '',
       types: map['types'] ?? '',
       color: map['color'] ?? '',
-      bmi: map['bmi'] ?? '',
+      bmi: map['bmi'],
     );
   }
 
@@ -124,7 +124,7 @@ class Stat extends Equatable {
   factory Stat.fromMap(Map<String, dynamic> map) {
     return Stat(
       name: map['name'] ?? '',
-      stat: map['stat'] ?? 0,
+      stat: map['stat'],
     );
   }
 

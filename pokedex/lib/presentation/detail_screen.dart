@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
+import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
@@ -19,6 +20,9 @@ class PokemonDetailScreen extends StatefulWidget {
 }
 
 class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
+  late final _dataController = AddToFavouriteDataController(
+    favoritePokenDataController: context.favouritePokemonController,
+  );
   late PokemonEntity pokemon;
 
   @override
@@ -43,10 +47,10 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
             expandedHeight: 300,
             backgroundColor: pokemon.backgroundColor,
             pinned: false,
-            flexibleSpace: _AppBar(pokemon: pokemon, textTheme: textTheme),
+            flexibleSpace: DetailAppBar(pokemon: pokemon, textTheme: textTheme),
           ),
           SliverToBoxAdapter(
-            child: _PokemonAtrribute(attribute: pokemon.attribute),
+            child: PokemonAtrribute(attribute: pokemon.attribute),
           ),
           SliverToBoxAdapter(
             child: Container(
@@ -90,26 +94,60 @@ class _PokemonDetailScreenState extends State<PokemonDetailScreen> {
           const SliverToBoxAdapter(child: SizedBox(height: 120)),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
-        label: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            "Mark as favourite",
-            style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
-          ),
-        ),
-        onPressed: () {},
+      floatingActionButton: AnimatedBuilder(
+        animation: _dataController,
+        builder: (context, _) {
+          return AppFloatingActionButton(
+            dataController: _dataController,
+            entity: pokemon,
+          );
+        },
       ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _dataController.dispose();
+    super.dispose();
+  }
+}
+
+class AppFloatingActionButton extends StatelessWidget {
+  const AppFloatingActionButton({
+    Key? key,
+    required this.dataController,
+    required this.entity,
+  }) : super(key: key);
+
+  final AddToFavouriteDataController dataController;
+  final PokemonEntity entity;
+
+  @override
+  Widget build(BuildContext context) {
+    final isFavourite = dataController.isFavourited(entity);
+
+    return FloatingActionButton.extended(
+      key: const ValueKey("favourite-fab"),
+      backgroundColor: isFavourite ? appLightColor : null,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(36)),
+      label: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Text(
+          isFavourite ? "Remove from favourite" : "Mark as favourite",
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                color: isFavourite ? appColor : Colors.white,
+                fontWeight: FontWeight.w700,
+              ),
+        ),
+      ),
+      onPressed: () => dataController.saveFavourite(entity),
     );
   }
 }
 
-class _AppBar extends StatelessWidget {
-  const _AppBar({
+class DetailAppBar extends StatelessWidget {
+  const DetailAppBar({
     Key? key,
     required this.pokemon,
     required this.textTheme,
@@ -175,8 +213,8 @@ class _AppBar extends StatelessWidget {
   }
 }
 
-class _PokemonAtrribute extends StatelessWidget {
-  const _PokemonAtrribute({required this.attribute});
+class PokemonAtrribute extends StatelessWidget {
+  const PokemonAtrribute({super.key, required this.attribute});
 
   final PokemonAttributeEntity attribute;
   @override

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:pokedex/domain/repository_base.dart';
+import 'package:pokedex/domain/pokemon_entity.dart';
 import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/widgets/widget_export.dart';
 import 'package:pokedex/util.dart/util_export.dart';
 
-class PokemonGridView<T extends BaseDataController<PokemonList>>
+class PokemonGridView<T extends BaseListDataController<PokemonEntity>>
     extends StatefulWidget {
   const PokemonGridView({
     super.key,
@@ -40,7 +40,7 @@ class PokemonGridView<T extends BaseDataController<PokemonList>>
   State<PokemonGridView> createState() => _PokemonGridViewState<T>();
 }
 
-class _PokemonGridViewState<T extends BaseDataController<PokemonList>>
+class _PokemonGridViewState<T extends BaseListDataController<PokemonEntity>>
     extends State<PokemonGridView<T>> {
   final _animateCardNotifier = ValueNotifier(true);
   final _scrollController = ScrollController();
@@ -95,7 +95,6 @@ class _PokemonGridViewState<T extends BaseDataController<PokemonList>>
                   itemBuilder: (context, index) => isLoading
                       ? PokedexCardShimmer(index: index, animate: !isLoading)
                       : PokedexCard(
-                          key: ValueKey(state.data[index]),
                           index: index % 20,
                           pokemon: state.data[index],
                           animate: _animateCardNotifier.value,
@@ -146,9 +145,11 @@ class BottomLoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
-      child: LinearProgressIndicator(minHeight: 6),
+    return const RepaintBoundary(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 12, right: 8, left: 8),
+        child: LinearProgressIndicator(minHeight: 6),
+      ),
     );
   }
 }

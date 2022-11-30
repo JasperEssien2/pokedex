@@ -31,7 +31,7 @@ class _ModelToEntityMapper
       name: model.name!.capitilizeFirst,
       isFavourited: false,
       type: model.types
-              ?.map((e) => e.pokemonV2Type?.name?.capitilizeFirst ?? '')
+              ?.map((e) => e.pokemonV2Type!.name!.capitilizeFirst)
               .toList()
               .join(", ") ??
           '',

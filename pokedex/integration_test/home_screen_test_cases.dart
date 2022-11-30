@@ -43,7 +43,7 @@ class HomeScreenTestCases {
 
     final context = tester.state(find.byType(HomeScreen)).context;
 
-    context.pokemonController.state = UIState(data: [], loading: true);
+    context.pokemonController.state = const UIState(data: [], loading: true);
     context.pokemonController.nextPage = 1;
 
     await tester.pump(const Duration(milliseconds: 20));
@@ -58,7 +58,7 @@ class HomeScreenTestCases {
 
     await _allPokemonFetch(context, tester);
 
-    context.pokemonController.state = UIState(data: [], loading: true);
+    context.pokemonController.state = const UIState(data: [], loading: true);
 
     await tester.pump(const Duration(milliseconds: 20));
 
@@ -219,7 +219,8 @@ class HomeScreenTestCases {
 
     final context = tester.state(find.byType(HomeScreen)).context;
 
-    context.favouritePokemonController.state = UIState(data: [], loading: true);
+    context.favouritePokemonController.state =
+        const UIState(data: [], loading: true);
     context.favouritePokemonController.nextPage = 1;
 
     await tester.pump(const Duration(milliseconds: 20));

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:pokedex/data/models/pokemon_v2_pokemon.dart';
 import 'package:pokedex/data/models/pokemon_v2_pokemonstat.dart';
 import 'package:pokedex/domain/pokemon_entity.dart';
-import 'package:pokedex/domain/repository_base.dart';
 import 'package:pokedex/presentation/data_controller.dart';
 import 'package:pokedex/presentation/data_provider.dart';
 
@@ -58,7 +57,7 @@ extension PokemonModelExt on PokemonV2Pokemon {
 }
 
 extension BuildContextExt on BuildContext {
-  T dataController<T extends BaseDataController<PokemonList>>() {
+  T dataController<T extends BaseListDataController<PokemonEntity>>() {
     return DataControllerProvider.of<T>(this);
   }
 
