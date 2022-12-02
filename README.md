@@ -1,70 +1,106 @@
 # Pokedex
 
-Welcome to the **Pokedex** assignment!
+This task was quite an interesting one. As with all my projects, I started with understanding the scope and state of this app.
 
-In this assignment, you will be implementing a Flutter application that allows interacting with Pokemons. We hope you like it!
+I decided to use the clean-architecture structure, for architecting the app. I built the app in these stages: `UI -> Domain -> Data`.
 
-## Assignment Instructions
+For a small-scale project like this,  I concluded that using state-management libraries might be overkill, and went with using what Flutter has provided: `ChangeNotifiers` and `InheritedWidget`.
 
-### Designs
+![Demo](display/app_demo.gif)
+### Structure 
+The sample structure of this project is displayed below:
 
-- You can access to the designs of the application from this [link](https://www.figma.com/file/vP3TT058xIqpOv5zv7cUg9/Pokedex-Assessment?node-id=32%3A83).
-  - You need to have a Figma account to see the all details. So, please create one if you don't have.
-- You can click the **Present** button from top right, to see different flows.
-- You can use the static assets in the designs, if required.
-- Please follow the designs as much as possible except these cases:
-   - For the background colors of Pokemons there are no strict rules, you can specify your own logic to determine them.
-   - For **Base stats** section on the **Pokemon details page**, feel free to specify your own logic to determine the colors, which basically indicate the magnitude of each field Hp, Attack, etc.
+    integration_test/
+        |- app_test.dart
+        |- custom_finders_matchers.dart
+        |- detail_screen_test_cases.dart
+        |- home_screen_test_cases.dart
+        |
+    lib/
+        |- data
+        |  |- models
+        |  |- data_sources
+        |  |_repository_impl.dart
+        |
+        |- domain
+        |  |- entity_mapper.dart
+        |  |- pokemon_entity.dart
+        |  |_ repository_base.dart
+        |
+        |- presentation
+        |  |- widgets
+        |  |  |_ widget_export.dart
+        |  |
+        |  |_ data_controllers.dart
+        |  |_ data_provider.dart
+        |  |_ detail_screen.dart
+        |  |_ home_screen.dart
+        |
+        |- util
+        |   |- colors.dart
+        |   |- extensions.dart
+        |   |- icon_util.dart
+        |   |_util_export.dart
+        |
+        |_ main.dart
 
-### Implementation Details
+The presentation layer consists of all UI-related code, including UI logic. This layer depends on the Domain layer.
 
-#### General Rules
+The domain layer bridge the presentation layer and the data layer. Since the presentation layer is only allowed to communicate with this layer. The base repository, entity(`PokemonEntity`), and entity mappers are defined here. The `PokemonEntity` is a simple data class that holds specific UI-related fields. It knows nothing about what the actual data coming from the server looks like. The mapper classes are provided to map a data model to an entity class.
 
-- You should use latest stable Flutter version.
-- You can use any library or any method you like, to implement the application.
-- Make sure that you unit test your methods or functions when necessary.
-- You can use Android devices/emulators while implementing the application, we will be testing with them.
-- Make sure UI looks good for various screen sizes as well.
-- Do not forget error handling, there may be scenarios you want to handle.
+The data layer holds all business logic. It's the backbone of any data-related task. It houses model data classes that parse JSON objects, an implementation of the repository, a data source, and a local data source.
 
-#### Pages
+The util folder contains some utilities used across apps, like colours, extensions, etc.
 
-- Splash Screen
-   - It needs to be shown while application is starting.
-- All Pokemons
-   - You need to fetch the Pokemons from this API: https://pokeapi.co
-   - You need to use pagination since there are lots of Pokemons to be listed coming from API.
-   - For Pokemon
-      - #001 -> **id**
-      - **Bulbasaur** -> **name**
-      - **Grass, Poison** -> from **types** field
-   - For the image of a Pokemon you can use, **sprites** > **other** > **official-artwork** > **front_default**.
-   - All Pokemons will be listed on this tab.
-   - We would like to see a progress indicator (style it however you want) while Pokemons are being fetched.
-- Favourites
-   - When a Pokemon is marked as favourite by clicking **Mark as favourite** button on the **Pokemon details page**, it should be shown on this tab.
-   - The number of Pokemons marked as favourite, should be shown near the tab text as shown on designs.
-   - Pokemons that are marked as favourite should be persistent and the data can be stored on disk. So, after a Pokemon is marked as favourite, it should still be shown under **Favourites** tab even after application is closed and started again.
-     - Please note that, we always want to see the most up-to-date information (what API returns) of the Pokemons marked as favourite. Plan your persistence strategy accordingly.
-- Pokemon details page
-   - Although it is not apparent from the designs, we want you to use **SliverAppBar** while implementing the app bar of this page.
-   - In order to calculate BMI use this formula: **weight / (height^2)** without caring any units.
-   - In order to calculate **Avg. Power** under **Base stats**, use this formula: **(Hp + Attack + Defense + Special Attack + Special Defense + Speed) / 6**
-   - **Remove from favourites** button removes the related Pokemon from the list shown on **Favourites** tab.
+### Packages used
+The dependencies used are listed below:
+- [Google fonts](https://pub.dev/packages/google_fonts): This package is included to utilise *Noto Sans* font for the application.
+- [Shimmer](https://pub.dev/packages/shimmer): The loading effect is handled by this package.
+- [Equatable](https://pub.dev/packages/equatable): Provides easy implementation of value-based equality of different object types. 
+- [Flutter SVG](https://pub.dev/packages/flutter_svg): Used to display network SVG  image URLs.
+- [Either Dart](https://pub.dev/packages/either_dart):  Provides a seamless, efficient way for handling errors.
+- [GraphQL](https://pub.dev/packages/graphql): Used to interact with pokemon GraphQL APIs. This also includes an internal [Hive](https://pub.dev/packages/hive) local storage implementation.
+    > To understand why both graphql and dio are included in this project move down by tapping [here](#why-graphql-and-restful-implementation)
+- [Path Provider](https://pub.dev/packages/path_provider): 
+- [Dio](https://pub.dev/packages/dio): Used to interact with pokemon RESTful APIs. 
+  > To understand why both graphql and dio are included in this project move down by tapping [here](#why-graphql-and-restful-implementation)
+- [Path Provider](https://pub.dev/packages/path_provider): Used by the [Hive](https://pub.dev/packages/hive) package to get a local storage path on the device.
 
-## Submission
-- You have 7 days to complete this task.
-- Please open a Pull/Merge request to this repository with everything you have prepared.
-- Prepare necessary instructions to run your application in DOC.md file. Also include references for used libraries, frameworks, code snippets.
-- If you have any questions, please send us an email, we'll get back to you as soon as possible.
-- Also, when you open the Pull/Merge request, please let us know via an email.
+#### Dev dependencies
+- [Integration Test](): A package to aid in running integration tests on real devices or emulators.
+- [Mocktail](https://pub.dev/packages/mocktail): Used to mock certain part of the code for unit testing.
 
-## Evaluation Criterias
-Not in order of priority:
-   - Code Readability
-   - Reusable widget usage
-   - Unit Testing
-   - State Management
-   - UI similar to the designs
-   - UI for various screen sizes
-   - Error handling
+### Why Graphql and Restful implementation
+Why is both `Dio` and `GraphQL` implemented in the same app? You may be wondering that. The reason is simple: I noticed pokemon has a [graphql API](beta.pokeapi.co/graphql/console) which is still in beta. Based on my experience using GraphQL and the flexibility it offers, I decided to go for it.
+
+Everything worked out fine until I was greeted with bad news. I tried test-running my app some days after and was greeted with a *server-down error*. At that point, I recalled the wise advice of not using resources still in beta, at least for production. Despite this challenge, there was light at the end of the tunnel.
+
+The project was structured flexibly. It allows data sources can be switched easily. After I was done with setting up the REST API, I thought it would be cool to keep both implementations.
+
+To switch from REST APIs to GraphQL APIs, head over to `lib/main.dart` on `line 15`, and replace the code, with the code below.
+
+```dart
+final dataSource = GraphQlDataSource();
+```
+Now the app uses data from GraphQL API.
+> To know more about the flexibility GraphQL offers, here's an article I wrote concerning this subject: [GraphQL article](https://blog.codemagic.io/flutter-graphql/).
+
+
+### Testing
+It can be painful sometimes to write tests. It was a bitter-sweet experience for me writing these test cases but it was worth it. However, I do believe testing is an integral part of software development. I make it an aim to write both *unit tests* and *widget tests*. Moreso, *integration tests* are even far better than unit and widget testing. 
+
+Integration test ensures that multiple components (widget, state-holders, repository) of a complete or large part of the app work together as expected, unlike unit test and widget test that ensures individual component/piece works together.
+
+I focused on writing integration tests for the app, that's why unit test cases are few, and no widget test cases. Integration test covers a large part. To run this integration test with coverage, use the command below.
+
+```
+flutter test integration_test/app_test.dart --coverage
+```
+
+I wrote some unit test cases to ensure `GraphQlDataSource` and `RepositoryImpl` work as expected. To run these test cases with coverage, use the command below.
+
+```
+flutter test --coverage
+```
+
+Thank you for taking the timeout to review my project. I hope this writing gives you the insight you need when looking through the codebase.
