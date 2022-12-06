@@ -18,12 +18,12 @@ The sample structure of this project is displayed below:
         |
     lib/
         |- data
+        |  |- entity_mapper.dart
         |  |- models
         |  |- data_sources
         |  |_repository_impl.dart
         |
         |- domain
-        |  |- entity_mapper.dart
         |  |- pokemon_entity.dart
         |  |_ repository_base.dart
         |
