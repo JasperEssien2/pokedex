@@ -1,5 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:pokedex/data/data_sources/data_source.dart';
+import 'package:pokedex/data/entity_mapper.dart';
 import 'package:pokedex/domain/domain_export.dart';
 
 class RepositoryImpl extends RepositoryBase {
